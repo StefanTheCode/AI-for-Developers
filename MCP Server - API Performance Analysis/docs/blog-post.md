@@ -1,18 +1,20 @@
 ---
 title: "I Built an MCP Server That Tests .NET API Performance (And It's Actually Useful)"
-subtitle: "What if your AI coding assistant could run load tests, detect ThreadPool starvation, and suggest fixes — all from a chat message?"
+subtitle: "What if your AI coding assistant could run load tests, detect ThreadPool starvation, and suggest fixes - all from a chat message?"
 date: "May 14 2026"
 category: "AI"
 image: "/images/mcp-performance-lab.png"
 ---
 
+> **Not on .NET?** This post walks through the C# implementation, but the same MCP server can be built with the official MCP SDKs for TypeScript, Python, Java or Go. The tools and load-testing logic translate directly; the diagnosis rules map to each runtime's own version of the same problems.
+
 I want to tell you about the most practical AI tool I've built for my own .NET workflow.
 
-Not a chatbot. Not a code generator. A **performance lab** where I describe what I want to test in plain English, and an AI agent runs the load tests, analyzes the results, detects problems, and proposes fixes — all through a conversation.
+Not a chatbot. Not a code generator. A **performance lab** where I describe what I want to test in plain English, and an AI agent runs the load tests, analyzes the results, detects problems, and proposes fixes - all through a conversation.
 
 Here's what a real session looks like:
 
-> **Me:** Compare http://localhost:5100/slow-thread-sleep with http://localhost:5100/slow-task-delay — 15 seconds, 20 concurrent users.
+> **Me:** Compare http://localhost:5100/slow-thread-sleep with http://localhost:5100/slow-task-delay - 15 seconds, 20 concurrent users.
 
 > **Copilot:**
 > ```
@@ -28,17 +30,17 @@ Here's what a real session looks like:
 
 One message. The AI ran two real load tests against a live server and gave me a side-by-side comparison with percentage deltas.
 
-The p95/p99 improvement is the telling number. `Thread.Sleep` saturates the ThreadPool — requests queue up waiting for a thread, and tail latency explodes. `Task.Delay` releases the thread while waiting, so 20 concurrent users are handled efficiently. Same delay, completely different behaviour under load.
+The p95/p99 improvement is the telling number. `Thread.Sleep` saturates the ThreadPool - requests queue up waiting for a thread, and tail latency explodes. `Task.Delay` releases the thread while waiting, so 20 concurrent users are handled efficiently. Same delay, completely different behaviour under load.
 
 ---
 
 ## What Is MCP?
 
-MCP (Model Context Protocol) is an open standard for exposing tools to AI clients. Instead of the AI guessing what your system does, you give it explicit, callable functions — like "run a load test" or "analyze these results."
+MCP (Model Context Protocol) is an open standard for exposing tools to AI clients. Instead of the AI guessing what your system does, you give it explicit, callable functions - like "run a load test" or "analyze these results."
 
 The AI becomes the **orchestrator**: it decides which tool to call, what parameters to pass, and how to reason about the output. You write the tools; the AI decides when and how to use them.
 
-This is different from function calling in OpenAI or tool use in Anthropic. MCP is transport-agnostic (HTTP or stdio) and any MCP-compatible client — GitHub Copilot, Claude Desktop, Cursor — can connect to the same server without changes.
+This is different from function calling in OpenAI or tool use in Anthropic. MCP is transport-agnostic (HTTP or stdio) and any MCP-compatible client - GitHub Copilot, Claude Desktop, Cursor - can connect to the same server without changes.
 
 ---
 
@@ -47,17 +49,17 @@ This is different from function calling in OpenAI or tool use in Anthropic. MCP 
 Four projects, each with a clear responsibility:
 
 ```
-PerformanceLab.Api        → port 5100  — sample ASP.NET Core API with broken endpoints
-PerformanceLab.McpServer  → port 5200  — MCP server + load test engine
-PerformanceLab.Dashboard  → port 5300  — Blazor dashboard for visualizing results
-PerformanceLab.Shared                  — shared models
+PerformanceLab.Api        → port 5100  - sample ASP.NET Core API with broken endpoints
+PerformanceLab.McpServer  → port 5200  - MCP server + load test engine
+PerformanceLab.Dashboard  → port 5300  - Blazor dashboard for visualizing results
+PerformanceLab.Shared                  - shared models
 ```
 
 ![Project structure in VS Code showing the four projects](_screenshots/project-structure.png)
 
 ---
 
-## Part 1: The Sample API — Intentionally Broken
+## Part 1: The Sample API - Intentionally Broken
 
 The first project is a minimal ASP.NET Core API where every endpoint demonstrates a specific performance anti-pattern. The goal is to have real targets we can measure.
 
@@ -79,12 +81,12 @@ app.MapGet("/slow-task-delay", async (int ms = 500) =>
 });
 ```
 
-From the caller's perspective these are identical. Under load with 20 concurrent users, they're worlds apart. `Thread.Sleep` holds onto a ThreadPool thread for 500ms. The .NET ThreadPool starts with a limited number of threads. Once they're all sleeping, new requests queue up. p99 climbs to 10× the p50 — the classic starvation signature.
+From the caller's perspective these are identical. Under load with 20 concurrent users, they're worlds apart. `Thread.Sleep` holds onto a ThreadPool thread for 500ms. The .NET ThreadPool starts with a limited number of threads. Once they're all sleeping, new requests queue up. p99 climbs to 10× the p50 - the classic starvation signature.
 
 ### N+1 vs Task.WhenAll
 
 ```csharp
-// ❌ Sequential — 5 queries one after another (~250ms total)
+// ❌ Sequential - 5 queries one after another (~250ms total)
 app.MapGet("/database-simulation", async () =>
 {
     var results = new List<string>();
@@ -96,7 +98,7 @@ app.MapGet("/database-simulation", async () =>
     return Results.Ok(results);
 });
 
-// ✅ Parallel — all 5 queries at the same time (~50ms total)
+// ✅ Parallel - all 5 queries at the same time (~50ms total)
 app.MapGet("/optimized-version", async () =>
 {
     var tasks = Enumerable.Range(1, 5).Select(async i =>
@@ -109,7 +111,7 @@ app.MapGet("/optimized-version", async () =>
 });
 ```
 
-The sequential version runs queries one at a time. If the queries don't depend on each other's results, there's no reason to wait. `Task.WhenAll` runs all five in parallel — a 5× latency reduction with one change.
+The sequential version runs queries one at a time. If the queries don't depend on each other's results, there's no reason to wait. `Task.WhenAll` runs all five in parallel - a 5× latency reduction with one change.
 
 There are also `/memory-heavy` (allocates 1MB of arrays per request to trigger GC pressure) and `/cpu-heavy` (SHA256 in a loop) endpoints. Each has a distinct performance signature the analyzer can detect.
 
@@ -131,7 +133,7 @@ builder.Services.AddSingleton<IResultStore, InMemoryResultStore>();
 builder.Services.AddScoped<LoadTestRunner>();
 builder.Services.AddScoped<ResultAnalyzer>();
 
-// MCP Server — discovers all [McpServerTool] methods automatically
+// MCP Server - discovers all [McpServerTool] methods automatically
 builder.Services
     .AddMcpServer()
     .WithHttpTransport()
@@ -204,7 +206,7 @@ public sealed class PerformanceTools(
 A few things worth noting:
 
 - **Descriptions are everything.** The AI decides which tool to call based entirely on the description. Be explicit about what the tool does and what it returns.
-- **Tools return strings, not objects.** The AI reads plain text and reasons about it. You don't need a typed schema — just clear, consistent output.
+- **Tools return strings, not objects.** The AI reads plain text and reasons about it. You don't need a typed schema - just clear, consistent output.
 - **`WithToolsFromAssembly()`** scans for all `[McpServerToolType]` classes at startup. You never register tools manually.
 
 The server exposes 10 tools in total: `run_load_test`, `compare_endpoints`, `analyze_results`, `detect_slow_responses`, `detect_threadpool_starvation`, `detect_memory_pressure`, `list_results`, `compare_before_after`, `suggest_optimizations`, and `generate_report`.
@@ -237,7 +239,7 @@ public async Task<LoadTestResult> RunAsync(LoadTestRequest request, Cancellation
 }
 ```
 
-`Task.WhenAll` spins up N concurrent workers — one per virtual user. Each worker fires requests in a tight loop until the time window closes. The `ConcurrentBag<RequestRecord>` collects every result without locking. Once all workers finish, `BuildResult` sorts the latencies and computes RPS, average, and percentiles.
+`Task.WhenAll` spins up N concurrent workers - one per virtual user. Each worker fires requests in a tight loop until the time window closes. The `ConcurrentBag<RequestRecord>` collects every result without locking. Once all workers finish, `BuildResult` sorts the latencies and computes RPS, average, and percentiles.
 
 The `HttpClient` is configured once with `IHttpClientFactory`:
 
@@ -258,7 +260,7 @@ builder.Services.AddHttpClient("loadtest", client =>
 
 ## Part 5: The Rule-Based Analyzer
 
-The analyzer is pure C# — no AI, no ML. It applies rules derived from real performance engineering patterns and returns a severity rating with concrete recommendations.
+The analyzer is pure C# - no AI, no ML. It applies rules derived from real performance engineering patterns and returns a severity rating with concrete recommendations.
 
 ```csharp
 public AnalysisResult Analyze(LoadTestResult result)
@@ -268,13 +270,13 @@ public AnalysisResult Analyze(LoadTestResult result)
     var optimizations   = new List<string>();
 
     // ThreadPool starvation: p99 is 10× higher than p50
-    // Healthy APIs: p99/p50 ratio of 2–5
-    // Starved APIs: p99/p50 ratio of 20–100
+    // Healthy APIs: p99/p50 ratio of 2-5
+    // Starved APIs: p99/p50 ratio of 20-100
     if (result.P50Ms > 0 && result.P99Ms / result.P50Ms > 10)
     {
         var ratio = result.P99Ms / result.P50Ms;
         issues.Add(
-            $"High latency variance — p99 is {ratio:F0}× higher than p50. " +
+            $"High latency variance - p99 is {ratio:F0}× higher than p50. " +
             "Classic threadpool starvation signature.");
         recommendations.Add(
             "Search your codebase for Thread.Sleep(), .Result, .Wait(), " +
@@ -316,7 +318,7 @@ public AnalysisResult Analyze(LoadTestResult result)
 }
 ```
 
-The AI wraps this with conversational context. It knows the endpoint URL, any code you've shown it, and results from previous runs. The combination — rule-based detection + AI reasoning — is more useful than either alone.
+The AI wraps this with conversational context. It knows the endpoint URL, any code you've shown it, and results from previous runs. The combination - rule-based detection + AI reasoning - is more useful than either alone.
 
 ---
 
@@ -329,28 +331,28 @@ Imagine 1,000 requests sorted by response time:
 - **p95:** The 950th. 1 in 20 users is slower than this.
 - **p99:** The 990th. 1% of users experience this or worse.
 
-A healthy API has p99 about 2–5× its p50. If p99 is 20–100× the p50, some requests are catastrophically slow — and that's the ThreadPool starvation signature.
+A healthy API has p99 about 2-5× its p50. If p99 is 20-100× the p50, some requests are catastrophically slow - and that's the ThreadPool starvation signature.
 
 Our actual test results demonstrate this clearly:
 
-**`/fast` (healthy baseline) — 10 users, 5 seconds:**
+**`/fast` (healthy baseline) - 10 users, 5 seconds:**
 ```
 RPS:     2,395.6
 Average: 4.2ms
 P50:     3.8ms
-P95:     7.9ms   (~2× p50 — healthy)
-P99:    11.5ms   (~3× p50 — healthy)
+P95:     7.9ms   (~2× p50 - healthy)
+P99:    11.5ms   (~3× p50 - healthy)
 ```
 
-**`/slow-thread-sleep` (starved) — 20 users, 15 seconds:**
+**`/slow-thread-sleep` (starved) - 20 users, 15 seconds:**
 ```
 RPS:    35.1
 P50:   ~500ms
-P95:  1000ms   (2× p50 — looks fine)
-P99:  1002ms   (2× p50 — still looks fine?)
+P95:  1000ms   (2× p50 - looks fine)
+P99:  1002ms   (2× p50 - still looks fine?)
 ```
 
-The starvation is visible in the throughput collapse (35 RPS vs 2,395), not always in the p99/p50 ratio — because every request is equally stuck waiting for a thread. The more users you add, the worse it gets.
+The starvation is visible in the throughput collapse (35 RPS vs 2,395), not always in the p99/p50 ratio - because every request is equally stuck waiting for a thread. The more users you add, the worse it gets.
 
 ![Load test results showing the RPS and latency comparison between the two endpoints](_screenshots/thread-sleep-results.png)
 
@@ -362,7 +364,7 @@ The dashboard gives you a visual overview of all stored runs. It polls `/api/res
 
 ![Blazor dashboard showing all test runs with color-coded severity](_screenshots/dashboard-home.png)
 
-The Compare page puts two results side by side with percentage deltas — the same data the MCP tool returns, but in a shareable visual format.
+The Compare page puts two results side by side with percentage deltas - the same data the MCP tool returns, but in a shareable visual format.
 
 ![Dashboard compare page showing Thread.Sleep vs Task.Delay side by side](_screenshots/dashboard-compare.png)
 
@@ -406,7 +408,7 @@ Generate a full performance report for the last two runs
 
 ![GitHub Copilot chat showing a compare_endpoints call with the full result output](_screenshots/copilot-compare-result.png)
 
-The AI understands the context across multiple messages. After running a comparison it can explain why one endpoint is faster, suggest the code fix, and generate a report — all in the same conversation.
+The AI understands the context across multiple messages. After running a comparison it can explain why one endpoint is faster, suggest the code fix, and generate a report - all in the same conversation.
 
 ---
 

@@ -3,28 +3,48 @@
   "owner": {
     "name": "Stefan Đokić (TheCodeMan)"
   },
-  "description": "5 free Claude Code skills for .NET developers (+ a security agent) — a starter set from the TheCodeMan AI ToolKit.",
+  "description": "5 free Claude Code skills for developers in any stack (+ a security agent) - a starter set from the TheCodeMan AI for Developers toolkit.",
   "plugins": [
     {
-      "name": "dotnet-claude-starter",
+      "name": "claude-starter",
       "source": "./",
-      "displayName": "5 Free .NET Claude Code Skills",
-      "description": "5 Claude Code skills for .NET: EF Core query optimizer, async/await auditor, clean architecture scaffolder, BenchmarkDotNet setup, and test coverage gap finder — plus an ASP.NET Core security auditor agent. Built for .NET 10 / C# 14.",
-      "version": "1.0.0",
+      "displayName": "5 Free Claude Code Skills for Developers",
+      "description": "5 stack-aware Claude Code skills: orm-query-optimizer, async-await-auditor, clean-architecture-scaffolder, benchmark-setup, and test-coverage-gap-finder - plus the api-security-auditor agent (OWASP Top 10 / API Security Top 10). Each skill detects your stack and works with C#/.NET, TypeScript/Node, Python, Java/Kotlin, and Go.",
+      "version": "2.0.0",
       "author": {
         "name": "Stefan Đokić (TheCodeMan)"
       },
       "homepage": "https://thecodeman.net",
       "repository": "https://github.com/StefanTheCode/dotnet-claude-starter",
       "license": "MIT",
-      "category": "dotnet",
-      "keywords": ["dotnet", "csharp", "aspnetcore", "ef-core", "performance", "testing", "security"],
+      "category": "development",
+      "keywords": [
+        "orm",
+        "database",
+        "performance",
+        "async",
+        "concurrency",
+        "architecture",
+        "benchmarking",
+        "testing",
+        "coverage",
+        "security",
+        "owasp",
+        "dotnet",
+        "csharp",
+        "typescript",
+        "nodejs",
+        "python",
+        "java",
+        "kotlin",
+        "go"
+      ],
       "strict": false,
       "skills": [
         "./skills/"
       ],
       "agents": [
-        "./agents/aspnetcore-security-auditor.md"
+        "./agents/api-security-auditor.md"
       ]
     }
   ]

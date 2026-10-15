@@ -1,6 +1,6 @@
-# EF Core — Advanced Patterns Reference
+# EF Core - Advanced Patterns Reference
 
-Read this when the basic checklist isn't enough — high-throughput paths, repeated hot queries, or tricky split-query / raw-SQL situations.
+Read this when the basic checklist isn't enough - high-throughput paths, repeated hot queries, or tricky split-query / raw-SQL situations.
 
 ## Compiled queries
 
@@ -53,7 +53,7 @@ await db.AuditLogs.Where(a => a.CreatedAt < retentionCutoff)
     .ExecuteDeleteAsync();
 ```
 
-Note: these bypass the change tracker and SaveChanges interceptors — won't fire domain events or audit logic that lives there.
+Note: these bypass the change tracker and SaveChanges interceptors - won't fire domain events or audit logic that lives there.
 
 ## Raw SQL escape hatch
 
@@ -80,7 +80,7 @@ optionsBuilder.LogTo(Console.WriteLine, LogLevel.Information)
 
 ## Tracking nuances
 
-- `AsNoTrackingWithIdentityResolution()` — no tracking, but de-duplicates the same entity appearing multiple times in a graph (prevents duplicate object instances).
+- `AsNoTrackingWithIdentityResolution()` - no tracking, but de-duplicates the same entity appearing multiple times in a graph (prevents duplicate object instances).
 - `QueryTrackingBehavior.NoTracking` as a global default for read-heavy contexts; opt back in per-query with `.AsTracking()` for writes.
 
 ## Common cartesian-explosion example

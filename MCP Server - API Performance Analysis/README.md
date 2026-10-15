@@ -1,6 +1,27 @@
-# Performance Lab — ASP.NET Core Performance MCP Server
+# Performance Lab - an MCP Server for API Performance Analysis
 
-An educational demo project showing how to build an MCP (Model Context Protocol) server that uses AI to diagnose .NET API performance problems in real time.
+An educational demo project showing how to build an MCP (Model Context Protocol) server that lets an AI client run load tests and diagnose API performance problems in real time.
+
+**This is the C#/.NET implementation; the pattern is the same in any language.** MCP is a protocol with official SDKs for C#, TypeScript, Python, Java, Kotlin, Go and more, so you can build the same server in your stack. The sample API being tested is ASP.NET Core, but the load-testing tools work against any HTTP endpoint.
+
+## How it works (any language)
+
+1. **Define tools.** Each tool is a function with a name, a description, and typed parameters (`run_load_test(url, seconds, users)`). The SDK turns them into a JSON schema the AI client can read.
+2. **Expose them over a transport.** **stdio** for a local server the client launches, or **HTTP** (this project) for a server you run yourself.
+3. **Do the real work in plain code.** The tools fire concurrent HTTP requests, compute latency percentiles (p50/p95/p99), and apply simple rules (e.g. a high p99/p50 ratio suggests blocking or thread starvation).
+4. **Return text the model can reason over.** The AI client calls tools, reads results, and explains them to you in chat.
+5. **Log to stderr, never stdout** when using stdio - stdout is the protocol channel.
+
+## Same idea in your stack
+
+| Component | .NET (this repo) | Python | TypeScript | Java | Go |
+|---|---|---|---|---|---|
+| MCP server SDK | `ModelContextProtocol` (official C# SDK) | Official `mcp` Python SDK (includes FastMCP) | `@modelcontextprotocol/sdk` | Official MCP Java SDK (Spring AI has MCP server support) | Official MCP Go SDK |
+| Concurrent HTTP load generation | `HttpClient` + `Task.WhenAll` | `httpx` + `asyncio` | `fetch` + `Promise.all` | `java.net.http.HttpClient` (+ virtual threads) | `net/http` + goroutines |
+| Result storage | In-memory store | dict | `Map` | `ConcurrentHashMap` | map + `sync.Mutex` |
+| Dashboard | Blazor Server | any web UI reading `/api/results` | any web UI | any web UI | any web UI |
+
+The diagnosis rules themselves (blocking calls, GC/memory pressure, sequential awaits that could run in parallel) are written for .NET here, but every runtime has its own version of the same problems (blocking the event loop in Node, the GIL and sync I/O in Python, goroutine/connection pool exhaustion in Go).
 
 ## What it does
 
@@ -19,10 +40,10 @@ The project includes a sample API with intentionally broken endpoints so you can
 | Project | Port | Description |
 |---------|------|-------------|
 | `PerformanceLab.Api` | 5100 | Sample ASP.NET Core API with educational (intentionally flawed) endpoints |
-| `PerformanceLab.McpServer` | 5200 | MCP server + REST API — the brain |
+| `PerformanceLab.McpServer` | 5200 | MCP server + REST API - the brain |
 | `PerformanceLab.Dashboard` | 5300 | Blazor Server dashboard for visualising results |
-| `PerformanceLab.Shared` | — | Shared models (no external dependencies) |
-| `PerformanceLab.Tests` | — | xUnit tests for core logic |
+| `PerformanceLab.Shared` | - | Shared models (no external dependencies) |
+| `PerformanceLab.Tests` | - | xUnit tests for core logic |
 
 ## Quick start
 
@@ -43,13 +64,13 @@ dotnet build
 Open three terminals:
 
 ```bash
-# Terminal 1 — Sample API
+# Terminal 1 - Sample API
 dotnet run --project src/PerformanceLab.Api
 
-# Terminal 2 — MCP Server
+# Terminal 2 - MCP Server
 dotnet run --project src/PerformanceLab.McpServer
 
-# Terminal 3 — Dashboard
+# Terminal 3 - Dashboard
 dotnet run --project src/PerformanceLab.Dashboard
 ```
 
@@ -110,12 +131,12 @@ Analyze the results for run <ID from the output above>
 
 | Endpoint | What it demonstrates |
 |----------|---------------------|
-| `GET /fast` | Baseline — returns immediately |
+| `GET /fast` | Baseline - returns immediately |
 | `GET /slow-thread-sleep?ms=500` | ❌ Blocks a ThreadPool thread with `Thread.Sleep` |
 | `GET /slow-task-delay?ms=500` | ✅ Correct async pattern with `await Task.Delay` |
-| `GET /memory-heavy` | Allocates ~1MB per request — GC pressure |
+| `GET /memory-heavy` | Allocates ~1MB per request - GC pressure |
 | `GET /cpu-heavy?iterations=50000` | CPU-bound work (SHA256 hash loop) |
-| `GET /database-simulation` | N+1 anti-pattern — 5 sequential awaits (~250ms) |
+| `GET /database-simulation` | N+1 anti-pattern - 5 sequential awaits (~250ms) |
 | `GET /optimized-version` | Fixed with `Task.WhenAll` (~50ms) |
 
 ## MCP Tools Available
@@ -157,16 +178,16 @@ PerformanceLab.McpServer (:5200)
   ├─ /mcp          ← MCP tools for AI clients
   ├─ /api/results  ← REST API for dashboard
   │
-  ├─ LoadTestRunner    — fires concurrent HTTP requests
-  ├─ ResultAnalyzer    — rule-based diagnosis
-  └─ InMemoryResultStore — holds results in memory
+  ├─ LoadTestRunner    - fires concurrent HTTP requests
+  ├─ ResultAnalyzer    - rule-based diagnosis
+  └─ InMemoryResultStore - holds results in memory
         │ HTTP
         ▼
 PerformanceLab.Api (:5100)
   └─ Sample endpoints (fast, slow, memory-heavy, etc.)
 
 PerformanceLab.Dashboard (:5300)
-  └─ Blazor Server — reads /api/results from McpServer
+  └─ Blazor Server - reads /api/results from McpServer
 ```
 
 ## Example AI Prompts

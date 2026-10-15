@@ -1,8 +1,8 @@
-# 5 Claude Code Skills for .NET — Starter Set
+# Claude Code Starter Skills for Developers - any stack
 
-A curated set of **5 Claude Code skills** (plus a security agent and a CLAUDE.md template) that make Claude write idiomatic, production-grade **.NET 10 / C# 14** on your own projects — instead of generic C#.
+A curated set of **5 Claude Code skills** (plus a security agent and CLAUDE.md templates) that make Claude write production-grade code on your own projects - in **C#/.NET, TypeScript/Node, Python, Java/Kotlin, Go**, and more. Every skill detects your stack from the repo first, applies a universal checklist, then uses the idioms of your language and framework.
 
-Curated by [Stefan Đokić — TheCodeMan](https://thecodeman.net), Microsoft MVP.
+Curated by [Stefan Đokić - TheCodeMan](https://thecodeman.net), Microsoft MVP.
 
 ---
 
@@ -10,10 +10,10 @@ Curated by [Stefan Đokić — TheCodeMan](https://thecodeman.net), Microsoft MV
 
 ```shell
 /plugin marketplace add StefanTheCode/dotnet-claude-starter
-/plugin install dotnet-claude-starter@thecodeman-claude-starter
+/plugin install claude-starter@thecodeman-claude-starter
 ```
 
-That's it — the 5 skills and the security agent install into Claude Code, in every project. Skills trigger automatically when your request matches; the agent runs when you ask for what it does.
+That's it - the 5 skills and the security agent install into Claude Code, in every project. Skills trigger automatically when your request matches; the agent runs when you ask for what it does.
 
 Update anytime:
 
@@ -29,33 +29,36 @@ Update anytime:
 
 ### 🧩 Skills (5)
 
-| Skill | What it does |
-|-------|--------------|
-| **ef-core-query-optimizer** | Finds and fixes slow EF Core queries — N+1, missing projections, missing `AsNoTracking`, cartesian explosion, compiled queries for hot paths. |
-| **async-await-auditor** | Audits async/await for deadlocks, `async void`, `.Result`/`.Wait()`, sync-over-async, fire-and-forget, and `CancellationToken` misuse — and rewrites it. |
-| **clean-architecture-scaffolder** | Scaffolds a .NET solution in Clean Architecture or Vertical Slice — layers, project references, CQRS/MediatR, and a working sample feature. |
-| **benchmarkdotnet-setup** | Sets up BenchmarkDotNet properly (benchmark classes, memory diagnostics, baselines) and explains the ns/op + allocation numbers. |
-| **test-coverage-gap-finder** | Finds the *meaningful* test gaps — untested public types, uncovered branches, risky code — and prioritizes by risk, not vanity percentage. |
+| Skill | What it does | Stacks |
+|-------|--------------|--------|
+| **orm-query-optimizer** | Finds and fixes slow ORM/database queries - N+1, over-fetching, tracking overhead, cartesian explosion, pagination, batching, missing indexes - and rewrites them. | EF Core, Prisma, TypeORM, Drizzle, SQLAlchemy, Django ORM, Hibernate/JPA, GORM |
+| **async-await-auditor** | Audits async and concurrent code for deadlocks, blocking calls, lost errors, missing cancellation, leaks, and unbounded concurrency - and rewrites it. | C#, JS/TS, Python asyncio, Java/Kotlin, Go, Rust |
+| **clean-architecture-scaffolder** | Scaffolds Clean Architecture or Vertical Slice structure with the dependency rule wired, a working sample feature, and an architecture guardrail test. | .NET, NestJS/Express, FastAPI, Spring Boot, Go |
+| **benchmark-setup** | Sets up correct micro-benchmarks (warmup, baselines, allocations, noise) and explains the numbers. | BenchmarkDotNet, JMH, pytest-benchmark/pyperf, Vitest bench/tinybench/mitata, Go testing.B + benchstat, Rust criterion |
+| **test-coverage-gap-finder** | Finds the *meaningful* test gaps - untested logic, uncovered branches, risky code - and prioritizes by risk, not vanity percentage. | coverlet, Vitest/Jest/c8, coverage.py/pytest-cov, JaCoCo, go test -cover |
 
 ### 🤖 Bonus agent (1)
 
 | Agent | What it does |
 |-------|--------------|
-| **aspnetcore-security-auditor** | Audits an ASP.NET Core codebase against the OWASP Top 10 and .NET-specific risks (auth gaps, injection, secrets in source, CORS, mass assignment, vulnerable dependencies) and produces a ranked report with fixes. |
+| **api-security-auditor** | Audits any backend (ASP.NET Core, Express/NestJS, FastAPI/Django, Spring Boot, Go net/http/Gin) against the OWASP Top 10 and OWASP API Security Top 10 - access control and IDOR/BOLA, auth/JWT, injection, secrets, CORS, mass assignment, SSRF, rate limits, vulnerable dependencies - and produces a ranked report with fixes. |
 
-### 📄 Bonus template (1)
+### 📄 Bonus templates
 
 | Template | What it does |
 |----------|--------------|
-| **dotnet-CLAUDE-md-template.md** | A drop-in `CLAUDE.md` for your repo root. It tells Claude your stack, structure, conventions, and the patterns to *never* suggest — so it writes your .NET, not someone else's, from the first prompt. |
+| **CLAUDE-md-template.md** | A stack-agnostic `CLAUDE.md` for your repo root: stack, build/test/lint/run commands, structure, conventions, a never-do list, and a definition of done - with fill-in instructions at the top. |
+| **dotnet-CLAUDE-md-template.md** | The filled-in .NET 10 / C# 14 example. |
+| **typescript-CLAUDE-md-template.md** | A filled-in NestJS + Prisma example. |
+| **python-CLAUDE-md-template.md** | A filled-in FastAPI + SQLAlchemy example. |
 
 ---
 
 ## Skill vs. agent
 
-**Skill** — a focused capability Claude loads automatically when your request matches it. It does the thing.
+**Skill** - a focused capability Claude loads automatically when your request matches it. It does the thing.
 
-**Agent** — a specialist that explores your codebase on its own and produces a report. You invoke it by asking for what it does.
+**Agent** - a specialist that explores your codebase on its own and produces a report. You invoke it by asking for what it does.
 
 ---
 
@@ -65,24 +68,29 @@ Install, then just talk to Claude Code naturally:
 
 ```
 > This EF query is slow, optimize it
-> Review this async code for deadlocks
-> Scaffold a clean architecture solution
-> Set up BenchmarkDotNet to compare these two methods
+> This Prisma query is slow - check src/orders
+> Find N+1 queries in my Django views
+> Review this asyncio code for blocking calls
+> Find floating promises in this Node service
+> Check this Go service for goroutine leaks
+> Scaffold a clean architecture solution in .NET
+> Set up a FastAPI project with vertical slices
+> Benchmark these two functions
 > What's not tested in this project?
-> Audit the security of this API      ← runs the security agent
+> Audit the security of this API      <- runs the security agent
 ```
 
-For the CLAUDE.md template, copy it to your repo root as `CLAUDE.md` and fill in the blanks (instructions are at the top of the file).
+For the CLAUDE.md template, copy `templates/CLAUDE-md-template.md` (or the example for your stack) to your repo root as `CLAUDE.md` and fill in the blanks - instructions are at the top of the file.
 
 ---
 
 ## Want the full toolkit?
 
-This is 5 skills. The full **[TheCodeMan AI ToolKit community](https://www.skool.com/thecodeman-ai-toolkit-9723)** has the whole set — **44+ skills and 7 specialist agents** across EF Core, performance, architecture, testing, security, observability, and DevOps — plus MCP servers in C#, building real AI features in .NET, live build-with-me sessions, and full courses. It's where I actually teach you how to use AI in real .NET work, not just hand you files.
+This is 5 skills. The full **[AI for Developers community on Skool](https://www.skool.com/ai-for-dotnet-developers/about)** has the whole set - **49 skills and 7 specialist agents** - plus lessons on Claude Code and agent workflows, building real AI features into your apps, and live office hours. It's where I actually teach you how to use AI in real development work, not just hand you files.
 
-**Open on a 7-day free trial** → [join the community](https://www.skool.com/thecodeman-ai-toolkit-9723)
+**Open on a 7-day free trial** -> [join AI for Developers](https://www.skool.com/ai-for-dotnet-developers/about)
 
-📬 Weekly AI-in-.NET newsletter (20k+ .NET devs): [thecodeman.net](https://thecodeman.net) · ▶️ [YouTube](https://www.youtube.com/@thecodeman_)
+📬 Weekly newsletter on .NET, architecture & AI (21,000+ developers): [thecodeman.net](https://thecodeman.net) · ▶️ [YouTube](https://www.youtube.com/@thecodeman_)
 
 ---
 
