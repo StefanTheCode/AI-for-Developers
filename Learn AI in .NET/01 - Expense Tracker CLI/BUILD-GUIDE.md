@@ -2,7 +2,7 @@
 
 > **Level:** Starter · **Time:** 3–4 hours · **You'll need:** .NET 10 SDK + any AI assistant (Claude Code, Copilot, Codex)
 >
-> Part of the **[October Build Challenge](../CHALLENGE.md)**. The [README](README.md) explains the finished project. This guide is for building it **yourself, from an empty folder, with AI**, and understanding every line.
+> Part of the **[October Build Challenge](../../CHALLENGE.md)**. The [README](README.md) explains the finished project. This guide is for building it **yourself, from an empty folder, with AI**, and understanding every line.
 
 ---
 
@@ -103,4 +103,4 @@ Add an xUnit test project for `ExpenseAnalyzer` (it's pure, so no mocks are need
 
 ---
 
-**Doing the [October Build Challenge](../CHALLENGE.md)?** Share your repo and the one thing AI got wrong in **[AI for .NET Developers](https://www.skool.com/ai-for-dotnet-developers/about)**. That's also where the Advanced & Expert levels come with walkthroughs, roadmaps, and someone to ask when you get stuck.
+**Doing the [October Build Challenge](../../CHALLENGE.md)?** Share your repo and the one thing AI got wrong in **[AI for Developers](https://www.skool.com/ai-for-dotnet-developers/about)**. That's also where the Advanced & Expert levels come with walkthroughs, roadmaps, and someone to ask when you get stuck.

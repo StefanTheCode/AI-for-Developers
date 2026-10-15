@@ -79,7 +79,7 @@ flowchart LR
 - **Generation** hands those chunks to the LLM with a strict "use only this
   context" instruction, so answers stay grounded and citable.
 
-> The existing **[RAG Basics](../RAG%20Basics)** project stores vectors in Postgres
+> The existing **[RAG Basics](../../RAG%20Basics)** project stores vectors in Postgres
 > with pgvector. This one keeps them in memory to stay dependency-free — same idea,
 > different store.
 

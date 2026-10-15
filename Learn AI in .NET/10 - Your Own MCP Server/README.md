@@ -19,7 +19,7 @@ process and talks to it over stdin/stdout.
 | Why logging must go to **stderr** on stdio | [`Program.cs`](src/NotesMcp/Program.cs) |
 | DI in tools (your API stays normal C#) | [`Services/NoteStore.cs`](src/NotesMcp/Services/NoteStore.cs) |
 
-> The repo's other MCP project, **[MCP Server - API Performance Analysis](../MCP%20Server%20-%20API%20Performance%20Analysis)**,
+> The repo's other MCP project, **[MCP Server - API Performance Analysis](../../MCP%20Server%20-%20API%20Performance%20Analysis)**,
 > uses the **HTTP** transport. This one uses **stdio** — the two ways to run an MCP server.
 
 ---

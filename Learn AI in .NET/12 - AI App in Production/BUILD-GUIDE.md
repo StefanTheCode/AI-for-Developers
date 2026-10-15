@@ -2,7 +2,7 @@
 
 > **Level:** Expert · **Time:** 8–15 hours · **You'll need:** .NET 10 SDK, [Ollama](https://ollama.com), Docker (optional, for the Aspire dashboard), an AI assistant
 >
-> Part of the **[October Build Challenge](../CHALLENGE.md)**. The [README](README.md) explains the finished project. This guide is for building it yourself with AI.
+> Part of the **[October Build Challenge](../../CHALLENGE.md)**. The [README](README.md) explains the finished project. This guide is for building it yourself with AI.
 
 ---
 
@@ -94,4 +94,4 @@ Add budget guardrails: a per-request token limit and a daily cost cap that switc
 
 ---
 
-**Finished all 12?** Post your production app in **[AI for .NET Developers](https://www.skool.com/ai-for-dotnet-developers/about)**. That's where we build the Advanced & Expert levels with source code, roadmaps, and help when you get stuck.
+**Finished all 12?** Post your production app in **[AI for Developers](https://www.skool.com/ai-for-dotnet-developers/about)**. That's where we build the Advanced & Expert levels with source code, roadmaps, and help when you get stuck.

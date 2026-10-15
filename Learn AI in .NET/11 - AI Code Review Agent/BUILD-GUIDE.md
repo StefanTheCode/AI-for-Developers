@@ -2,7 +2,7 @@
 
 > **Level:** Expert · **Time:** 5–8 hours · **You'll need:** .NET 10 SDK, [Ollama](https://ollama.com) with a **tool-capable** model (`llama3.2`, `qwen2.5`), an AI assistant
 >
-> Part of the **[October Build Challenge](../CHALLENGE.md)**. The [README](README.md) explains the finished project. This guide is for building it yourself with AI.
+> Part of the **[October Build Challenge](../../CHALLENGE.md)**. The [README](README.md) explains the finished project. This guide is for building it yourself with AI.
 
 ---
 
@@ -91,4 +91,4 @@ Point it at a real `git diff`, write findings as **SARIF**, and run it as a GitH
 
 ---
 
-**Doing the [October Build Challenge](../CHALLENGE.md)?** Share your repo and the one thing AI got wrong in **[AI for .NET Developers](https://www.skool.com/ai-for-dotnet-developers/about)**. Advanced & Expert builders get walkthroughs, roadmaps, and someone to ask when they get stuck.
+**Doing the [October Build Challenge](../../CHALLENGE.md)?** Share your repo and the one thing AI got wrong in **[AI for Developers](https://www.skool.com/ai-for-dotnet-developers/about)**. Advanced & Expert builders get walkthroughs, roadmaps, and someone to ask when they get stuck.

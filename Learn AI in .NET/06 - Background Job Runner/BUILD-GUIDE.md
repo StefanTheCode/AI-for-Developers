@@ -2,7 +2,7 @@
 
 > **Level:** Intermediate · **Time:** 4–7 hours · **You'll need:** .NET 10 SDK, an AI assistant
 >
-> Part of the **[October Build Challenge](../CHALLENGE.md)**. The [README](README.md) explains the finished project. This guide is for building it yourself with AI.
+> Part of the **[October Build Challenge](../../CHALLENGE.md)**. The [README](README.md) explains the finished project. This guide is for building it yourself with AI.
 
 ---
 
@@ -104,4 +104,4 @@ Add a Minimal API `POST /jobs` that enqueues jobs, and replace the hand-rolled r
 
 ---
 
-**Doing the [October Build Challenge](../CHALLENGE.md)?** Share your repo and the one thing AI got wrong in **[AI for .NET Developers](https://www.skool.com/ai-for-dotnet-developers/about)**. That's also where the Advanced & Expert levels come with walkthroughs, roadmaps, and someone to ask when you get stuck.
+**Doing the [October Build Challenge](../../CHALLENGE.md)?** Share your repo and the one thing AI got wrong in **[AI for Developers](https://www.skool.com/ai-for-dotnet-developers/about)**. That's also where the Advanced & Expert levels come with walkthroughs, roadmaps, and someone to ask when you get stuck.

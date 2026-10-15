@@ -2,7 +2,7 @@
 
 > **Level:** Advanced · **Time:** 6–10 hours · **You'll need:** .NET 10 SDK, [Ollama](https://ollama.com) with `all-minilm` + `llama3.2`, an AI assistant
 >
-> Part of the **[October Build Challenge](../CHALLENGE.md)**. The [README](README.md) explains the finished project. This guide is for building it yourself with AI.
+> Part of the **[October Build Challenge](../../CHALLENGE.md)**. The [README](README.md) explains the finished project. This guide is for building it yourself with AI.
 
 ---
 
@@ -83,8 +83,8 @@ Also: the chunker has a **minimum** size but no **maximum**. What happens with o
 
 ## 🚀 Stretch goal
 
-Swap the in-memory store for **pgvector** (see [RAG Basics](../RAG%20Basics)) or `Microsoft.Extensions.VectorData`, and return citations with the exact sentence used.
+Swap the in-memory store for **pgvector** (see [RAG Basics](../../RAG%20Basics)) or `Microsoft.Extensions.VectorData`, and return citations with the exact sentence used.
 
 ---
 
-**Doing the [October Build Challenge](../CHALLENGE.md)?** Share your repo and the one thing AI got wrong in **[AI for .NET Developers](https://www.skool.com/ai-for-dotnet-developers/about)**. Advanced & Expert builders get walkthroughs, roadmaps, and someone to ask when they get stuck.
+**Doing the [October Build Challenge](../../CHALLENGE.md)?** Share your repo and the one thing AI got wrong in **[AI for Developers](https://www.skool.com/ai-for-dotnet-developers/about)**. Advanced & Expert builders get walkthroughs, roadmaps, and someone to ask when they get stuck.

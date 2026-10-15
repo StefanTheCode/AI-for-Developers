@@ -2,7 +2,7 @@
 
 > **Level:** Starter · **Time:** 3–5 hours · **You'll need:** .NET 10 SDK, an AI assistant, and VS Code / Rider / Visual Studio for `.http` files
 >
-> Part of the **[October Build Challenge](../CHALLENGE.md)**. The [README](README.md) explains the finished project. This guide is for building it yourself with AI.
+> Part of the **[October Build Challenge](../../CHALLENGE.md)**. The [README](README.md) explains the finished project. This guide is for building it yourself with AI.
 
 ---
 
@@ -87,4 +87,4 @@ Add pagination (`page`, `pageSize`, max 100, total count in a header) and switch
 
 ---
 
-**Doing the [October Build Challenge](../CHALLENGE.md)?** Share your repo and the one thing AI got wrong in **[AI for .NET Developers](https://www.skool.com/ai-for-dotnet-developers/about)**. That's also where the Advanced & Expert levels come with walkthroughs, roadmaps, and someone to ask when you get stuck.
+**Doing the [October Build Challenge](../../CHALLENGE.md)?** Share your repo and the one thing AI got wrong in **[AI for Developers](https://www.skool.com/ai-for-dotnet-developers/about)**. That's also where the Advanced & Expert levels come with walkthroughs, roadmaps, and someone to ask when you get stuck.
