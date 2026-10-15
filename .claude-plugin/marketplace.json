@@ -1,0 +1,79 @@
+{
+  "name": "thecodeman-ai-toolkit",
+  "owner": {
+    "name": "Stefan Đokić (TheCodeMan)"
+  },
+  "description": "AI for Developers Toolkit - Claude Code skills and agents for developers in any stack (.NET, Node/TypeScript, Python, Java/Kotlin, Go), plus a .NET pack. By TheCodeMan.net.",
+  "plugins": [
+    {
+      "name": "ai-dev-toolkit",
+      "source": "./toolkit",
+      "displayName": "AI for Developers Toolkit",
+      "description": "45 Claude Code skills and 7 specialist agents that run on your real code in any stack: ORM query optimization, API and architecture scaffolding, unit and integration tests, auth, caching, OpenTelemetry, logging, Docker and CI/CD, plus code review, architecture, security, database and observability audits.",
+      "version": "2.0.0",
+      "author": {
+        "name": "Stefan Đokić (TheCodeMan)"
+      },
+      "homepage": "https://thecodeman.net",
+      "repository": "https://github.com/StefanTheCode/AI-for-Developers",
+      "license": "MIT",
+      "category": "development",
+      "keywords": [
+        "ai",
+        "claude-code",
+        "skills",
+        "agents",
+        "architecture",
+        "testing",
+        "security",
+        "performance",
+        "observability",
+        "devops",
+        "dotnet",
+        "typescript",
+        "python",
+        "java",
+        "go"
+      ],
+      "strict": false,
+      "skills": [
+        "./skills/"
+      ],
+      "agents": [
+        "./agents/api-security-auditor.md",
+        "./agents/architecture-reviewer.md",
+        "./agents/code-reviewer.md",
+        "./agents/db-performance-auditor.md",
+        "./agents/framework-upgrade-agent.md",
+        "./agents/legacy-modernization-assistant.md",
+        "./agents/observability-gap-finder.md"
+      ]
+    },
+    {
+      "name": "dotnet-pack",
+      "source": "./packs/dotnet",
+      "displayName": ".NET Pack (Span, legacy .NET Framework, WinForms)",
+      "description": ".NET-only skills: Span<T>/Memory<T> refactoring, packages.config to Central Package Management migration, classic ADO.NET auditing, and safe WinForms maintenance, plus a legacy sample with 19 planted issues.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Stefan Đokić (TheCodeMan)"
+      },
+      "homepage": "https://thecodeman.net",
+      "repository": "https://github.com/StefanTheCode/AI-for-Developers",
+      "license": "MIT",
+      "category": "dotnet",
+      "keywords": [
+        "dotnet",
+        "csharp",
+        "legacy",
+        "dotnet-framework",
+        "winforms",
+        "span"
+      ],
+      "strict": false,
+      "skills": [
+        "./skills/"
+      ]
+    }
+  ]
+}

@@ -28,7 +28,7 @@ It runs on two tracks:
 
 Most developers start on Track A (immediate wins in your day job) and move into Track B (the skills that make you rare).
 
-> This repo has companion code for several steps - the `Semantic Search`, `RAG Basics`, and `MCP Server` projects (C#/.NET), plus the `Claude/` skills and agent (stack-agnostic). You build, not just read. Each project README also shows the same idea in Python, TypeScript, Java and Go.
+> This repo has companion code for several steps - the `Semantic Search`, `RAG Basics`, and `MCP Server` projects (C#/.NET), plus the `toolkit/` with 45 skills and 7 agents (stack-agnostic). You build, not just read. Each project README also shows the same idea in Python, TypeScript, Java and Go.
 
 **The single mindset for this whole roadmap:** AI is a tool you *drive*, not magic you *wait for*. You stay the engineer. It goes faster.
 
@@ -81,7 +81,7 @@ Follow these steps **in order**. Don't skip ahead.
 | Plan-before-edit workflow | MUST LEARN |
 | Trying every assistant | OPTIONAL |
 
-> **Companion code:** [`Claude/templates/`](../Claude/templates) has a generic `CLAUDE-md-template.md` for any stack, plus a filled-in .NET example.
+> **Companion code:** [`toolkit/templates/`](../toolkit/templates) has a generic `CLAUDE-md-template.md` for any stack, plus a filled-in .NET example.
 
 ---
 
@@ -121,7 +121,7 @@ Follow these steps **in order**. Don't skip ahead.
 | Slash commands & hooks | USE WHEN NEEDED |
 | Multi-agent orchestration | OPTIONAL |
 
-> **Companion code:** the [`Claude/`](../Claude) folder has ready, stack-agnostic skills, an `api-security-auditor` agent, and CLAUDE.md templates to start from.
+> **Companion code:** the [`toolkit/`](../toolkit) folder has 45 ready, stack-agnostic skills, 7 agents, and CLAUDE.md templates to start from.
 
 ---
 
@@ -545,12 +545,12 @@ Assumes ~1-2 hours a day. Adjust to your pace and experience.
 
 ### Week 1 - AI assistant + `CLAUDE.md`
 **Learn:** one assistant deeply; the `CLAUDE.md` file; outcome-based prompting.
-**Build:** add a `CLAUDE.md` to a real project (start from `Claude/templates/CLAUDE-md-template.md`); finish one backlog task fully with AI.
+**Build:** add a `CLAUDE.md` to a real project (start from `toolkit/templates/CLAUDE-md-template.md`); finish one backlog task fully with AI.
 **Practice:** take three tasks and do them AI-first; notice where the context file changes output.
 
 ### Week 2 - Skills & agents
 **Learn:** skills, subagents, slash commands.
-**Build:** install skills (the `Claude/` folder), use 5 on a real repo; write one custom skill.
+**Build:** install skills (the `toolkit/` folder), use 5 on a real repo; write one custom skill.
 **Practice:** run a security/code-review agent and act on its report.
 
 ### Week 3 - MCP

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Codebase Health - AI for Developers Toolkit</title>
+<style>
+:root{--bg:#150f29;--card:#241c47;--card2:#2c2358;--line:#3a2f6b;--ink:#ECE9FF;--muted:#A99FD6;
+ --yellow:#FFD23F;--green:#46d39a;--orange:#ffa552;--red:#ff6b81;--blue:#7aa2ff;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:radial-gradient(1000px 520px at 80% -12%,#2c2358 0%,var(--bg) 60%);color:var(--ink);
+ font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;min-height:100vh;padding:0 0 60px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+header{padding:28px 0 8px;display:flex;align-items:center;gap:13px}
+.logo{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--yellow),#ff9f43);
+ display:flex;align-items:center;justify-content:center;font-weight:900;color:#150f29;font-size:19px}
+.brand .n{font-size:20px;font-weight:800}.brand .s{font-size:13px;color:var(--muted)}
+.hero{display:flex;gap:26px;flex-wrap:wrap;align-items:center;margin:24px 0 8px;
+ background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--line);border-radius:20px;padding:26px 28px}
+.gauge{width:140px;height:140px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:none;position:relative}
+.gauge .inner{width:108px;height:108px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center}
+.gauge .num{font-size:40px;font-weight:900;line-height:1}.gauge .of{font-size:12px;color:var(--muted);margin-top:2px}
+.hero-meta{flex:1;min-width:260px}
+.hero-meta .v{display:inline-block;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;padding:4px 12px;border-radius:999px;margin-bottom:10px}
+.hero-meta h1{font-size:22px;margin:0 0 8px}.hero-meta p{color:var(--muted);font-size:14.5px}
+.sect{font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:30px 0 14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:14px}
+.cat{background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--line);border-radius:16px;padding:16px 18px}
+.cat .top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.cat h3{font-size:16px;margin:0}.cat .sc{font-size:22px;font-weight:900}
+.bar{height:8px;border-radius:999px;background:rgba(255,255,255,.07);margin:10px 0 4px;overflow:hidden}
+.bar span{display:block;height:100%;border-radius:999px}
+.cat .vb{font-size:11px;font-weight:700;color:var(--muted)}
+.findings{list-style:none;margin:12px 0 0;padding:0;display:flex;flex-direction:column;gap:6px}
+.findings li{font-size:12.5px;display:flex;gap:8px;align-items:baseline}
+.sev{font-size:9.5px;font-weight:800;padding:2px 7px;border-radius:5px;text-transform:uppercase}
+.sev-low{background:rgba(122,162,255,.15);color:var(--blue)}.sev-medium{background:rgba(255,165,82,.15);color:var(--orange)}
+.sev-high{background:rgba(255,107,129,.15);color:var(--red)}.sev-critical{background:var(--red);color:#150f29}
+.loc{color:#8d83b8;font-family:ui-monospace,monospace}
+.stacks{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 8px}.chip{font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:999px;border:1px solid var(--line);color:var(--muted);background:rgba(255,255,255,.04)}
+.signals{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}
+.sig{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px}.sig .k{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}.sig .val{font-size:14px;font-weight:700;margin-top:2px}
+.actions{background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--yellow);border-radius:16px;padding:18px 20px}
+.actions ol{margin:8px 0 0;padding-left:20px}.actions li{margin-bottom:8px;font-size:14.5px}
+footer{color:#8d83b8;font-size:12.5px;margin-top:34px;text-align:center;border-top:1px solid var(--line);padding-top:20px}
+footer a{color:var(--yellow);font-weight:700;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">&lt;/&gt;</div>
+    <div class="brand"><div class="n">Codebase Health</div><div class="s">AI for Developers Toolkit</div></div>
+  </header>
+
+  <div class="hero">
+    <div class="gauge" id="gauge"><div class="inner"><div class="num" id="overall"></div><div class="of">/ 100</div></div></div>
+    <div class="hero-meta">
+      <span class="v" id="overall-verdict"></span>
+      <h1 id="project"></h1>
+      <div class="stacks" id="stacks"></div>
+      <p id="summary"></p>
+    </div>
+  </div>
+
+  <div id="signals-wrap" style="display:none"><div class="sect">Measured signals</div><div class="signals" id="signals"></div></div>
+
+  <div class="sect">Category scores</div>
+  <div class="grid" id="cats"></div>
+
+  <div class="sect">Top actions to raise the score</div>
+  <div class="actions"><ol id="actions"></ol></div>
+
+  <footer id="foot"></footer>
+</div>
+
+<script id="data" type="application/json">/*__HEALTH_DATA__*/</script>
+<script>
+const D = JSON.parse(document.getElementById('data').textContent);
+function color(score){ if(score>=85)return '#46d39a'; if(score>=70)return '#9ad36a'; if(score>=50)return '#ffa552'; return '#ff6b81'; }
+function esc(s){return (s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+
+const oc = color(D.overall);
+document.getElementById('overall').textContent = D.overall;
+document.getElementById('overall').style.color = oc;
+document.getElementById('gauge').style.background = `conic-gradient(${oc} ${D.overall*3.6}deg, rgba(255,255,255,.08) 0)`;
+const ov = document.getElementById('overall-verdict');
+ov.textContent = D.overall>=85?'Strong':D.overall>=70?'Healthy':D.overall>=50?'Needs work':'At risk';
+ov.style.background = oc+'22'; ov.style.color = oc; ov.style.border = '1px solid '+oc+'66';
+document.getElementById('project').textContent = D.project || 'Your codebase';
+document.getElementById('summary').textContent = D.summary || '';
+document.getElementById('stacks').innerHTML = (D.stacks||[]).map(s=>`<span class="chip">${esc(s)}</span>`).join('');
+if((D.signals||[]).length){
+  document.getElementById('signals-wrap').style.display='';
+  document.getElementById('signals').innerHTML = D.signals.map(s=>`<div class="sig"><div class="k">${esc(s.name)}</div><div class="val">${esc(String(s.value??''))}</div></div>`).join('');
+}
+
+document.getElementById('cats').innerHTML = (D.categories||[]).map(c=>{
+  const col = color(c.score);
+  const f = (c.findings||[]).map(x=>{
+    const sev=(x.severity||'low').toLowerCase();
+    const loc=x.location?` <span class="loc">${esc(x.location)}</span>`:'';
+    return `<li><span class="sev sev-${sev}">${esc(sev)}</span><span>${esc(x.title)}${loc}</span></li>`;
+  }).join('');
+  return `<div class="cat">
+    <div class="top"><h3>${esc(c.name)}</h3><span class="sc" style="color:${col}">${c.score}</span></div>
+    <div class="bar"><span style="width:${Math.max(0,Math.min(100,c.score))}%;background:${col}"></span></div>
+    <div class="vb">${esc(c.verdict||'')}</div>
+    ${f?`<ul class="findings">${f}</ul>`:'<p class="vb" style="margin-top:10px">No findings - looks solid.</p>'}
+  </div>`;
+}).join('');
+
+document.getElementById('actions').innerHTML = (D.topActions||[]).map(a=>`<li>${esc(a)}</li>`).join('');
+document.getElementById('foot').innerHTML =
+  `Generated ${esc(D.date||'')} &middot; <a href="https://www.skool.com/ai-for-dotnet-developers/about" target="_blank" rel="noopener">AI for Developers Toolkit</a> &middot; re-run weekly to track your score`;
+</script>
+</body>
+</html>

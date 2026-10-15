@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CLAUDE.md Generator for .NET - TheCodeMan</title>
+<style>
+  :root{
+    --bg:#16122e; --bg2:#1e193b; --card:#221c42; --line:rgba(255,255,255,.10);
+    --text:#eceaf7; --muted:#a49dcb; --yellow:#ffd23f; --green:#50fa7b; --purple:#7c5cff;
+    --code:#0f0b22;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    background:radial-gradient(1200px 600px at 20% -10%, #241d4d 0%, var(--bg) 55%);color:var(--text);min-height:100vh}
+  a{color:var(--green);text-decoration:none}
+  .wrap{max-width:1180px;margin:0 auto;padding:28px 20px 60px}
+  header.top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:6px}
+  .brand{font-weight:800;letter-spacing:.5px}
+  .brand .y{color:var(--yellow)}
+  h1{font-size:34px;line-height:1.15;margin:14px 0 6px}
+  h1 .y{color:var(--yellow)}
+  .sub{color:var(--muted);font-size:16px;max-width:720px;line-height:1.5;margin-bottom:22px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  @media(max-width:900px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px}
+  .card h2{font-size:13px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin:0 0 16px}
+  .field{margin-bottom:16px}
+  label.lbl{display:block;font-size:13px;font-weight:600;color:var(--text);margin-bottom:7px}
+  select,input[type=text]{width:100%;background:var(--bg2);color:var(--text);border:1px solid var(--line);
+    border-radius:9px;padding:10px 12px;font-size:14px;outline:none}
+  select:focus,input:focus{border-color:var(--purple)}
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{display:flex;align-items:center;gap:7px;background:var(--bg2);border:1px solid var(--line);
+    border-radius:999px;padding:7px 12px;font-size:13px;cursor:pointer;user-select:none}
+  .chip input{accent-color:var(--green);width:15px;height:15px}
+  .chip.red input{accent-color:#ff6b6b}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .out{position:sticky;top:20px}
+  .codehead{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+  .codehead .dots{display:flex;gap:6px}
+  .dot{width:11px;height:11px;border-radius:50%}
+  .btns{display:flex;gap:8px}
+  button.act{background:var(--green);color:#08281a;border:none;border-radius:8px;padding:8px 14px;font-weight:800;
+    font-size:13px;cursor:pointer}
+  button.act.ghost{background:transparent;color:var(--text);border:1px solid var(--line)}
+  button.act:active{transform:translateY(1px)}
+  pre.code{background:var(--code);border:1px solid var(--line);border-radius:12px;padding:18px;overflow:auto;
+    max-height:620px;font-family:'SF Mono',Menlo,Consolas,monospace;font-size:12.5px;line-height:1.6;white-space:pre-wrap;color:#e7e4fb;margin:0}
+  pre.code .h{color:var(--yellow);font-weight:700}
+  pre.code .c{color:var(--muted)}
+  pre.code .b{color:var(--green)}
+  pre.code .r{color:#ff8a8a}
+  footer.cta{margin-top:28px;background:linear-gradient(90deg,#241d4d,#1b1638);border:1px solid var(--line);
+    border-radius:16px;padding:22px 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px}
+  footer.cta b{color:var(--yellow)}
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--green);color:#08281a;
+    font-weight:800;padding:10px 18px;border-radius:10px;opacity:0;transition:.25s;pointer-events:none}
+  .toast.show{opacity:1}
+  .note{font-size:12px;color:var(--muted);margin-top:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">TheCodeMan · <span class="y">AI in .NET</span></div>
+    <div style="font-size:13px;color:var(--muted)">Free tool · no signup</div>
+  </header>
+
+  <h1>The <span class="y">CLAUDE.md</span> Generator for .NET</h1>
+  <p class="sub">Claude Code starts every session knowing nothing about your repo - so it writes generic C#: controllers, repositories, AutoMapper. Answer a few questions and get a <b>CLAUDE.md</b> that tells it how <i>you</i> build. Drop it in your repo root and Claude writes your .NET from the first prompt.</p>
+
+  <div class="grid">
+    <!-- FORM -->
+    <div class="card">
+      <h2>Your project</h2>
+
+      <div class="field">
+        <label class="lbl">Project name</label>
+        <input type="text" id="pname" value="Orders API" oninput="gen()">
+      </div>
+
+      <div class="row2">
+        <div class="field">
+          <label class="lbl">.NET version</label>
+          <select id="dotnet" onchange="gen()">
+            <option value="10">.NET 10 / C# 14</option>
+            <option value="9">.NET 9 / C# 13</option>
+            <option value="8">.NET 8 / C# 12</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="lbl">Web style</label>
+          <select id="web" onchange="gen()">
+            <option>Minimal APIs</option>
+            <option>MVC Controllers</option>
+            <option>Blazor</option>
+            <option>Worker Service</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row2">
+        <div class="field">
+          <label class="lbl">Architecture</label>
+          <select id="arch" onchange="gen()">
+            <option>Vertical Slice</option>
+            <option>Clean Architecture</option>
+            <option>Domain-Driven Design</option>
+            <option>Modular Monolith</option>
+            <option>Simple / N-layer</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="lbl">Data / ORM</label>
+          <select id="data" onchange="gen()">
+            <option>EF Core + PostgreSQL</option>
+            <option>EF Core + SQL Server</option>
+            <option>Dapper</option>
+            <option>MongoDB</option>
+            <option>None</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row2">
+        <div class="field">
+          <label class="lbl">Validation</label>
+          <select id="valid" onchange="gen()">
+            <option>FluentValidation</option>
+            <option>DataAnnotations</option>
+            <option>Manual guard clauses</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="lbl">Error handling</label>
+          <select id="err" onchange="gen()">
+            <option>Result pattern</option>
+            <option>Exceptions + ProblemDetails</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row2">
+        <div class="field">
+          <label class="lbl">Messaging</label>
+          <select id="msg" onchange="gen()">
+            <option>None</option>
+            <option>Wolverine</option>
+            <option>MassTransit</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="lbl">Testing</label>
+          <select id="test" onchange="gen()">
+            <option>xUnit + Testcontainers</option>
+            <option>xUnit + mocks</option>
+            <option>NUnit</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row2">
+        <div class="field">
+          <label class="lbl">Authentication</label>
+          <select id="auth" onchange="gen()">
+            <option>None</option>
+            <option>JWT Bearer</option>
+            <option>OIDC (OpenID Connect)</option>
+            <option>ASP.NET Core Identity</option>
+            <option>API Key</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="lbl">API documentation</label>
+          <select id="apidocs" onchange="gen()">
+            <option>OpenAPI (built-in)</option>
+            <option>Scalar</option>
+            <option>Swashbuckle</option>
+            <option>NSwag</option>
+            <option>None</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row2">
+        <div class="field">
+          <label class="lbl">API versioning</label>
+          <select id="ver" onchange="gen()">
+            <option>None</option>
+            <option>URL segment</option>
+            <option>Header</option>
+            <option>Query string</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="lbl">Object mapping</label>
+          <select id="map" onchange="gen()">
+            <option>Explicit / manual</option>
+            <option>Mapster</option>
+            <option>AutoMapper</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row2">
+        <div class="field">
+          <label class="lbl">Entity ID strategy</label>
+          <select id="ids" onchange="gen()">
+            <option>GUID (v4)</option>
+            <option>UUIDv7 (sequential)</option>
+            <option>Strongly-typed IDs</option>
+            <option>int / bigint identity</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="lbl">JSON serialization</label>
+          <select id="json" onchange="gen()">
+            <option>System.Text.Json</option>
+            <option>Newtonsoft.Json</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="lbl">Extras</label>
+        <div class="chips">
+          <label class="chip"><input type="checkbox" id="x_cache" onchange="gen()">HybridCache</label>
+          <label class="chip"><input type="checkbox" id="x_polly" checked onchange="gen()">Polly v8 resilience</label>
+          <label class="chip"><input type="checkbox" id="x_serilog" checked onchange="gen()">Serilog</label>
+          <label class="chip"><input type="checkbox" id="x_otel" onchange="gen()">OpenTelemetry</label>
+          <label class="chip"><input type="checkbox" id="x_options" checked onchange="gen()">Options pattern</label>
+          <label class="chip"><input type="checkbox" id="x_aspire" onchange="gen()">.NET Aspire</label>
+          <label class="chip"><input type="checkbox" id="x_health" checked onchange="gen()">Health checks</label>
+          <label class="chip"><input type="checkbox" id="x_ratelimit" onchange="gen()">Rate limiting</label>
+          <label class="chip"><input type="checkbox" id="x_flags" onchange="gen()">Feature flags</label>
+          <label class="chip"><input type="checkbox" id="x_cpm" checked onchange="gen()">Central Package Mgmt</label>
+          <label class="chip"><input type="checkbox" id="x_nullable" checked onchange="gen()">Nullable enabled</label>
+          <label class="chip"><input type="checkbox" id="x_analyzers" checked onchange="gen()">.editorconfig + analyzers</label>
+          <label class="chip"><input type="checkbox" id="x_globalusing" onchange="gen()">Global usings</label>
+          <label class="chip"><input type="checkbox" id="x_docker" onchange="gen()">Docker (multi-stage)</label>
+          <label class="chip"><input type="checkbox" id="x_ci" onchange="gen()">GitHub Actions CI</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="lbl">Never suggest <span style="color:var(--muted);font-weight:400">(this section does the heavy lifting)</span></label>
+        <div class="chips">
+          <label class="chip red"><input type="checkbox" id="n_automapper" checked onchange="gen()">AutoMapper</label>
+          <label class="chip red"><input type="checkbox" id="n_repo" checked onchange="gen()">Repository over EF</label>
+          <label class="chip red"><input type="checkbox" id="n_datetime" checked onchange="gen()">DateTime.Now</label>
+          <label class="chip red"><input type="checkbox" id="n_inmem" checked onchange="gen()">In-memory DB tests</label>
+          <label class="chip red"><input type="checkbox" id="n_exc" checked onchange="gen()">Exceptions for control flow</label>
+          <label class="chip red"><input type="checkbox" id="n_bizctrl" checked onchange="gen()">Business logic in controllers</label>
+          <label class="chip red"><input type="checkbox" id="n_magic" checked onchange="gen()">Magic strings/numbers</label>
+          <label class="chip red"><input type="checkbox" id="n_syncover" checked onchange="gen()">Sync-over-async</label>
+          <label class="chip red"><input type="checkbox" id="n_regions" onchange="gen()">#region blocks</label>
+          <label class="chip red"><input type="checkbox" id="n_newtonsoft" onchange="gen()">Newtonsoft.Json</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- OUTPUT -->
+    <div class="out">
+      <div class="card">
+        <div class="codehead">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div class="dots"><span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span></div>
+            <span style="font-size:12px;color:var(--muted)">CLAUDE.md</span>
+          </div>
+          <div class="btns">
+            <button class="act ghost" onclick="download()">Download</button>
+            <button class="act" onclick="copyMd()">Copy</button>
+          </div>
+        </div>
+        <pre class="code" id="preview"></pre>
+        <p class="note">Tip: put this file at your repository root as <b>CLAUDE.md</b>. Claude Code loads it automatically at the start of every session.</p>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align:center;color:var(--muted);font-size:12px;margin-top:18px">
+    Built by <a href="https://thecodeman.net" target="_blank">Stefan Đokić - TheCodeMan</a>
+  </div>
+</div>
+
+<div class="toast" id="toast">Copied ✓</div>
+
+<script>
+function val(id){return document.getElementById(id).value;}
+function chk(id){return document.getElementById(id).checked;}
+
+function buildMd(){
+  const name=val('pname')||'My Project';
+  const dn=val('dotnet');
+  const cs={'10':'C# 14','9':'C# 13','8':'C# 12'}[dn];
+  const web=val('web'), arch=val('arch'), data=val('data'), valid=val('valid'),
+        err=val('err'), msg=val('msg'), test=val('test'),
+        auth=val('auth'), apidocs=val('apidocs'), ver=val('ver'), map=val('map'), ids=val('ids'), json=val('json');
+
+  const stack=[];
+  stack.push(`- **.NET ${dn} / ${cs}** (target: \`net${dn}.0\`)`);
+  stack.push(`- **Web:** ASP.NET Core ${web}`);
+  if(data!=='None') stack.push(`- **Data:** ${data}`);
+  stack.push(`- **Validation:** ${valid}`);
+  if(msg!=='None') stack.push(`- **Messaging:** ${msg}`);
+  const obs=[]; if(chk('x_serilog'))obs.push('Serilog'); if(chk('x_otel'))obs.push('OpenTelemetry');
+  if(obs.length) stack.push(`- **Observability:** ${obs.join(', ')}`);
+  if(auth!=='None') stack.push(`- **Auth:** ${auth}`);
+  if(apidocs!=='None') stack.push(`- **API docs:** ${apidocs}`);
+  if(map!=='Explicit / manual') stack.push(`- **Mapping:** ${map}`);
+  if(json!=='System.Text.Json') stack.push(`- **Serialization:** ${json}`);
+  if(chk('x_aspire')) stack.push(`- **Orchestration:** .NET Aspire`);
+  stack.push(`- **Testing:** ${test}`);
+  stack.push(`- **Architecture:** ${arch}`);
+
+  // architecture note
+  let archNote='';
+  if(arch==='Vertical Slice') archNote='Organize by **feature**, not by technical layer. Everything for one feature lives together in its `Features/[Feature]/` folder.';
+  else if(arch==='Clean Architecture') archNote='Four layers: Domain, Application, Infrastructure, API. Dependencies point inward. Domain has **zero** external dependencies.';
+  else if(arch==='Domain-Driven Design') archNote='Aggregates, value objects, domain events, strongly-typed IDs. Keep domain logic in the domain, not in services.';
+  else if(arch==='Modular Monolith') archNote='Independent modules with clear boundaries. Modules communicate through public contracts, not by reaching into each other’s internals.';
+  else archNote='Keep layers thin and the flow explicit. Don’t over-abstract a simple app.';
+
+  const conv=[];
+  if(err==='Result pattern') conv.push('- **Errors:** use the **Result pattern** for expected failures (not-found, validation, conflict). Map to HTTP via `ProblemDetails` at the endpoint. Reserve exceptions for the genuinely unexpected.');
+  else conv.push('- **Errors:** throw domain exceptions for failures and translate them to `ProblemDetails` via a global exception handler.');
+  if(chk('n_datetime')) conv.push('- **Time:** never use `DateTime.Now`/`DateTime.UtcNow` directly - inject `TimeProvider` (testable, deterministic).');
+  conv.push('- **Async:** every async method takes and passes a `CancellationToken`. Never block on async (`.Result`, `.Wait()`). No `async void` except event handlers.');
+  if(web==='Minimal APIs') conv.push('- **APIs:** use `TypedResults`, not `Results`. DTOs are immutable `record` types. Never expose EF entities over the wire.');
+  if(data.startsWith('EF Core')) conv.push('- **EF Core:** project to DTOs with `.Select()`; add `.AsNoTracking()` on reads; avoid N+1; paginate list queries. Prefer `AnyAsync()` over `CountAsync() > 0`.');
+  if(chk('x_options')) conv.push('- **Config:** use the **Options pattern** (strongly-typed + `ValidateOnStart`), not raw `IConfiguration["..."]` in business logic. Secrets stay out of source.');
+  if(chk('x_cache')) conv.push('- **Caching:** use `HybridCache` (L1+L2, tag invalidation, stampede protection), not hand-rolled `IDistributedCache` serialize/deserialize.');
+  if(chk('x_polly')) conv.push('- **Resilience:** wrap outbound HTTP with a **Polly v8** pipeline via `AddResilienceHandler` (retry + jitter, circuit breaker, timeout). No hand-rolled retries.');
+  if(map==='Mapster') conv.push('- **Mapping:** use **Mapster** for object mapping - configure explicit `TypeAdapterConfig`, no runtime reflection surprises.');
+  else if(map==='AutoMapper') conv.push('- **Mapping:** AutoMapper is used here - keep profiles explicit and tested; prefer projecting to DTOs in EF queries over mapping full entities.');
+  else conv.push('- **Mapping:** write **explicit** mappings (constructor / `Select`). No mapping library.');
+  if(ids==='UUIDv7 (sequential)') conv.push('- **IDs:** use `Guid.CreateVersion7()` (UUIDv7) for entity keys - sequential, index-friendly.');
+  else if(ids==='Strongly-typed IDs') conv.push('- **IDs:** use **strongly-typed IDs** (readonly record structs) with EF value converters - no raw `Guid`/`int` keys leaking through the domain.');
+  else if(ids==='int / bigint identity') conv.push('- **IDs:** database identity `int`/`bigint` keys.');
+  else conv.push('- **IDs:** `Guid` keys.');
+  if(json==='System.Text.Json') conv.push('- **Serialization:** use **System.Text.Json** with source-generated contexts for hot paths. Do not add Newtonsoft.Json.');
+  else conv.push('- **Serialization:** Newtonsoft.Json is the project standard here.');
+  if(auth==='JWT Bearer') conv.push('- **Auth:** JWT bearer with proper token validation params; policy-based authorization. Secrets in config, never in code.');
+  else if(auth==='OIDC (OpenID Connect)') conv.push('- **Auth:** OIDC via the standard middleware; validate issuer/audience; use policies, not role strings scattered in code.');
+  else if(auth==='ASP.NET Core Identity') conv.push('- **Auth:** ASP.NET Core Identity; hash-only passwords, lockout, and policy-based authorization.');
+  else if(auth==='API Key') conv.push('- **Auth:** API-key auth via a dedicated handler; keys stored hashed, never logged.');
+  if(ver!=='None') conv.push(`- **API versioning:** ${ver} versioning via \`Asp.Versioning\`; version every public endpoint.`);
+  if(chk('x_ratelimit')) conv.push('- **Rate limiting:** use the built-in ASP.NET Core rate limiter; protect auth and write endpoints.');
+  if(chk('x_health')) conv.push('- **Health checks:** expose liveness + readiness; check real dependencies (DB, cache), not just `200 OK`.');
+  if(chk('x_flags')) conv.push('- **Feature flags:** gate features with `Microsoft.FeatureManagement`, not `if` + config booleans.');
+  conv.push(`- **Modern C#:** use ${Number(dn)>=9?'primary constructors, collection expressions, ':''}records, and pattern matching where they genuinely improve the code - not for their own sake.`);
+
+  // testing
+  let testNote='';
+  if(test==='xUnit + Testcontainers') testNote='Prefer **integration tests** for anything touching the database: `WebApplicationFactory<Program>` + **Testcontainers** (real engine). Unit tests only for pure logic.';
+  else if(test==='xUnit + mocks') testNote='xUnit with mocks for isolated units. Mock only boundaries you own.';
+  else testNote='NUnit test suite. Keep tests isolated and deterministic.';
+  if(chk('n_inmem')) testNote+=' Do **not** use `UseInMemoryDatabase` or mock `DbContext` - they hide real bugs.';
+
+  // never suggest
+  const never=[];
+  if(chk('n_automapper') && map!=='AutoMapper') never.push('- **AutoMapper** - write explicit mappings.');
+  if(chk('n_repo')) never.push('- **Repository / UnitOfWork over EF Core** - `DbContext` already is one. Use it directly.');
+  if(chk('n_exc')) never.push('- **Exceptions for control flow** - use the Result pattern for expected outcomes.');
+  if(chk('n_datetime')) never.push('- **`DateTime.Now`** - use `TimeProvider`.');
+  if(chk('n_inmem')) never.push('- **In-memory database in tests** - use Testcontainers.');
+  if(chk('n_bizctrl')) never.push('- **Business logic in controllers/endpoints** - keep endpoints thin; logic lives in handlers/services.');
+  if(chk('n_magic')) never.push('- **Magic strings/numbers** - use constants, enums, or the Options pattern.');
+  if(chk('n_syncover')) never.push('- **Sync-over-async** (`.Result`, `.Wait()`, `.GetAwaiter().GetResult()`) - stay async end to end.');
+  if(chk('n_regions')) never.push('- **`#region` blocks** - if a file needs regions to navigate, split it.');
+  if(chk('n_newtonsoft') && json!=='Newtonsoft.Json') never.push('- **Newtonsoft.Json** - use System.Text.Json.');
+  never.push('- **Service locator** (`GetService` in business logic) - use constructor injection.');
+  never.push('- **Over-abstraction** - no interface with a single implementation "just in case."');
+
+  // commands
+  const runProj = web==='Worker Service' ? '[src/Worker]' : '[src/Api]';
+  const cmds=['- Build: `dotnet build`','- Test: `dotnet test`',`- Run: \`dotnet run --project ${runProj}\``,'- Format: `dotnet format`'];
+  if(data.startsWith('EF Core')) cmds.push('- Migrate: `dotnet ef migrations add <Name> -p [src/Infrastructure] -s '+runProj+'`');
+  if(chk('x_docker')) cmds.push('- Docker: `docker build -t '+((name.toLowerCase().replace(/[^a-z0-9]+/g,'-'))||'app')+' .`');
+
+  const setup=[];
+  if(chk('x_cpm')) setup.push('- **Central Package Management** - versions live in `Directory.Packages.props`; never pin versions in individual `.csproj` files.');
+  if(chk('x_nullable')) setup.push('- **Nullable reference types** are enabled solution-wide; treat nullable warnings as errors.');
+  if(chk('x_analyzers')) setup.push('- **Analyzers + `.editorconfig`** are enforced; run `dotnet format` and keep the build warning-free.');
+  if(chk('x_globalusing')) setup.push('- **Global usings** for common namespaces; keep per-file usings minimal.');
+  if(chk('x_docker')) setup.push('- **Docker:** multi-stage build, non-root user, health check, small runtime image.');
+  if(chk('x_ci')) setup.push('- **CI:** GitHub Actions in `.github/workflows` - build → test → publish on every push/PR.');
+
+  let md=`# Project: ${name}\n\n`;
+  md+=`Instructions for Claude Code working in this repository. Follow these by default; ask before deviating.\n\n`;
+  md+=`## Stack\n\n${stack.join('\n')}\n\n`;
+  md+=`## Architecture & structure\n\n- ${archNote}\n- Match the conventions in existing features before writing new code. Don't introduce a new pattern without asking.\n\n`;
+  md+=`## Conventions\n\n${conv.join('\n')}\n\n`;
+  md+=`## Testing\n\n- ${testNote}\n- Test names: \`Method_Scenario_ExpectedResult\`. One logical assertion per test. When fixing a bug, first write a failing test that reproduces it.\n\n`;
+  md+=`## Never suggest\n\n${never.join('\n')}\n\n`;
+  if(setup.length) md+=`## Project setup\n\n${setup.join('\n')}\n\n`;
+  md+=`## Commands\n\n${cmds.join('\n')}\n\n`;
+  md+=`## Workflow with Claude\n\n- For non-trivial changes, give a short **plan first** and wait for approval before editing.\n- **Don't invent problems** - leave code that's already correct and idiomatic alone.\n- Explain each change in one line (what + why).\n\n`;
+  md+=`<!-- Generated with the CLAUDE.md Generator for .NET - thecodeman.net -->\n`;
+  return md;
+}
+
+function highlight(md){
+  return md.split('\n').map(l=>{
+    if(l.startsWith('#')) return '<span class="h">'+esc(l)+'</span>';
+    if(l.startsWith('<!--')) return '<span class="c">'+esc(l)+'</span>';
+    let e=esc(l);
+    return e;
+  }).join('\n');
+}
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+let currentMd='';
+function gen(){
+  currentMd=buildMd();
+  document.getElementById('preview').innerHTML=highlight(currentMd);
+}
+function copyMd(){
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(currentMd).then(()=>toast('Copied ✓')).catch(fallbackCopy);
+  } else { fallbackCopy(); }
+}
+function fallbackCopy(){
+  const ta=document.createElement('textarea');ta.value=currentMd;document.body.appendChild(ta);
+  ta.select();try{document.execCommand('copy');toast('Copied ✓');}catch(e){toast('Press Ctrl/Cmd+C');}
+  document.body.removeChild(ta);
+}
+function download(){
+  const blob=new Blob([currentMd],{type:'text/markdown'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);a.download='CLAUDE.md';a.click();
+  toast('Downloaded ✓');
+}
+function toast(t){const el=document.getElementById('toast');el.textContent=t;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),1600);}
+gen();
+</script>
+</body>
+</html>

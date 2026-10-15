@@ -1,0 +1,6 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LegacyErp.Data", "LegacyErp.Data\LegacyErp.Data.csproj", "{A1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LegacyErp.UI", "LegacyErp.UI\LegacyErp.UI.csproj", "{B2}"
+EndProject

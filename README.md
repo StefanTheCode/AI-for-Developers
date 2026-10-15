@@ -18,7 +18,8 @@ Built by [Stefan Đokić - TheCodeMan](https://thecodeman.net), Microsoft MVP.
 | Folder | What it is | Who it's for |
 |--------|-----------|--------------|
 | **[docs/roadmap.md](docs/roadmap.md)** | **AI Roadmap for Developers - 2026.** An 8-step path from "AI-curious" to shipping AI, with an "In your stack" map for .NET, Python, TypeScript, Java and Go. | Start here if you don't know where to begin |
-| **[Claude](./Claude)** | **Claude Code Starter Skills.** 5 skills, a security agent and CLAUDE.md templates that work in any stack. Install as a plugin in 2 commands. | Anyone using Claude Code |
+| **[toolkit](./toolkit)** | **AI for Developers Toolkit.** 45 Claude Code skills and 7 agents for any stack (.NET, Node/TypeScript, Python, Java/Kotlin, Go), CLAUDE.md templates and a dashboard. Install as a plugin in 2 commands. | Anyone using Claude Code |
+| **[packs/dotnet](./packs/dotnet)** | **.NET Pack.** 4 .NET-only skills (Span<T>, legacy .NET Framework, ADO.NET, WinForms) and a legacy sample with 19 planted issues. | .NET developers |
 | **[MCP Server - API Performance Analysis](./MCP%20Server%20-%20API%20Performance%20Analysis)** | A Model Context Protocol server that lets Claude, Copilot or Cursor load-test and diagnose your API. | Roadmap Step 3 |
 | **[Semantic Search AI Example](./Semantic%20Search%20AI%20Example)** | Search by meaning with local embeddings (Ollama) and cosine similarity. | Roadmap Step 5 |
 | **[RAG Basics](./RAG%20Basics)** | A minimal RAG pipeline: embed, store vectors in Postgres (pgvector), ground the LLM's answers in your data. | Roadmap Step 6 |
@@ -27,9 +28,21 @@ Built by [Stefan Đokić - TheCodeMan](https://thecodeman.net), Microsoft MVP.
 
 ---
 
+## Install the toolkit
+
+```shell
+/plugin marketplace add StefanTheCode/AI-for-Developers
+/plugin install ai-dev-toolkit@thecodeman-ai-toolkit
+/plugin install dotnet-pack@thecodeman-ai-toolkit   # optional, .NET only
+```
+
+Details and migration from the old `dotnet-ai-toolkit` plugin: [toolkit/INSTALL.md](toolkit/INSTALL.md).
+
+---
+
 ## Where to start
 
-- **New to AI as a developer?** Read the [roadmap](docs/roadmap.md), then install the [Claude Code starter skills](./Claude).
+- **New to AI as a developer?** Read the [roadmap](docs/roadmap.md), then install the [toolkit](./toolkit).
 - **Want to build AI features?** Run [Semantic Search](./Semantic%20Search%20AI%20Example), then [RAG Basics](./RAG%20Basics), then the [MCP server](./MCP%20Server%20-%20API%20Performance%20Analysis).
 - **Learn best by doing?** Pick a project in [Learn AI in .NET](./Learn%20AI%20in%20.NET) and join the [Build Challenge](CHALLENGE.md).
 
@@ -53,7 +66,7 @@ Built by [Stefan Đokić - TheCodeMan](https://thecodeman.net), Microsoft MVP.
 
 ## Go further
 
-Video lessons for the roadmap drop inside the **[AI for Developers community](https://www.skool.com/ai-for-dotnet-developers/about)** on Skool (7-day free trial), together with 49 skills, 7 agents, Claude Code workflow lessons and live office hours where I answer your questions.
+Video lessons for the roadmap drop inside the **[AI for Developers community](https://www.skool.com/ai-for-dotnet-developers/about)** on Skool (7-day free trial), together with lessons for every skill and agent, Claude Code workflow lessons and live office hours where I answer your questions.
 
 📬 Free: [weekly newsletter on .NET, architecture & AI](https://thecodeman.net) (21,000+ developers) · ▶️ [YouTube](https://www.youtube.com/@thecodeman_)
 
