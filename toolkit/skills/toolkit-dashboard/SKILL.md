@@ -21,7 +21,7 @@ Generate a single, self-contained `toolkit/dashboard/index.html` that gives a cl
 <repo>/
   toolkit/
     skills/<name>/SKILL.md          core skills (any stack)
-    agents/<name>.md                core agents (+ <name>.USAGE.md)
+    agents/<name>.md                core agents (usage notes in agent-usage/<name>.USAGE.md)
     runs/*.json                     run records (input)
     catalog-meta.json               optional metadata fallback (input)
     dashboard/index.html            generated

@@ -160,7 +160,7 @@ def load_agents(sources, meta):
                 'category': fm.get('category', ''),
                 'version': fm.get('version', ''),
                 'tools': fm.get('tools', ''),
-                'has_usage': os.path.isfile(os.path.join(adir, base + '.USAGE.md')),
+                'has_usage': os.path.isfile(os.path.join(adir, base + '.USAGE.md')) or os.path.isfile(os.path.join(os.path.dirname(adir), 'agent-usage', base + '.USAGE.md')),
                 'has_refs': False,
             }
             items.append(apply_meta(item, meta))
