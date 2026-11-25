@@ -183,7 +183,7 @@ cur.Append("  classDef old fill:#eee,stroke:#999,color:#333;\n");
 // 2. target architecture
 var targets = units.Where(u => Str(u["kind"]) == "webforms-page").GroupBy(u => Str(u["target"])).ToDictionary(g => g.Key, g => g.Count());
 var tgt = new StringBuilder("flowchart LR\n  browser([\"Browser / API clients\"])\n  subgraph host[\"ASP.NET Core on .NET 10\"]\n");
-foreach (var t in targets) tgt.Append($"    {Id(t.Key)}[\"{L(t.Key)}<br/><small>{t.Value} pages</small>\"]\n");
+foreach (var t in targets) tgt.Append($"    {Id(t.Key)}[\"{L(t.Key)}<br/><small>{t.Value} {(t.Value == 1 ? "page" : "pages")}</small>\"]\n");
 var apiCount = units.Count(u => Str(u["kind"]) == "webapi-controller");
 var mvcCount = units.Count(u => Str(u["kind"]) == "mvc-controller");
 var endpointCount = units.Count(u => Str(u["kind"]) is "http-handler" or "http-module");
@@ -206,7 +206,7 @@ str.Append($"  subgraph oldapp[\"Old app (.NET Framework)\"]\n    legacy[\"{L(we
 str.Append("  yarp -- yes --> done\n  yarp -- no / fallback --> legacy\n");
 if (blockers.Any(b => Str(b["signal"]) is "Session state" or "Forms authentication"))
     str.Append("  done -. \"remote session + remote auth<br/>(System.Web adapters)\" .-> legacy\n");
-str.Append("  style done fill:#e3f5ea,stroke:#2d7a52\n  style legacy fill:#f1f1f1,stroke:#999\n");
+str.Append("  style done fill:#e3f5ea,stroke:#2d7a52,color:#14361f\n  style legacy fill:#f1f1f1,stroke:#999,color:#333\n");
 
 // 4. phases + gantt
 var phaseDefs = new List<(string Name, Func<(string Cat, double Lo, double Hi, string Kind, string Id), bool> Match)>

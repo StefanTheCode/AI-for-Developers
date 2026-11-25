@@ -128,7 +128,7 @@
   browser([&quot;Browser / API clients&quot;])
   subgraph host[&quot;ASP.NET Core on .NET 10&quot;]
     nRazorPages[&quot;Razor Pages&lt;br/&gt;&lt;small&gt;5 pages&lt;/small&gt;&quot;]
-    nBlazorInteractiveServer[&quot;Blazor (Interactive Server)&lt;br/&gt;&lt;small&gt;1 pages&lt;/small&gt;&quot;]
+    nBlazorInteractiveServer[&quot;Blazor (Interactive Server)&lt;br/&gt;&lt;small&gt;1 page&lt;/small&gt;&quot;]
     api[&quot;API controllers&lt;br/&gt;&lt;small&gt;2 from Web API 2&lt;/small&gt;&quot;]
     mvc[&quot;MVC controllers + view components&lt;br/&gt;&lt;small&gt;1 from MVC 5&lt;/small&gt;&quot;]
     mw[&quot;Middleware + endpoints&lt;br/&gt;&lt;small&gt;2 modules/handlers&lt;/small&gt;&quot;]
@@ -154,8 +154,8 @@
   yarp -- yes --&gt; done
   yarp -- no / fallback --&gt; legacy
   done -. &quot;remote session + remote auth&lt;br/&gt;(System.Web adapters)&quot; .-&gt; legacy
-  style done fill:#e3f5ea,stroke:#2d7a52
-  style legacy fill:#f1f1f1,stroke:#999
+  style done fill:#e3f5ea,stroke:#2d7a52,color:#14361f
+  style legacy fill:#f1f1f1,stroke:#999,color:#333
 </pre><div class="caption">Both apps run side by side until the last route has moved.</div></div><h2>Roadmap</h2><div class="diagram"><pre class="mermaid">gantt
   dateFormat YYYY-MM-DD
   axisFormat %d %b
