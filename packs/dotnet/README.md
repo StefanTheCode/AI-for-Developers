@@ -8,6 +8,10 @@ Optional add-on for the AI for Developers Toolkit. The core toolkit (`toolkit/sk
 /plugin install dotnet-pack@thecodeman-ai-toolkit
 ```
 
+### Using GitHub Copilot?
+
+The skills work in Copilot as they are, and the two legacy agents have Copilot editions in `copilot/agents/`. Setup for Visual Studio 2026, VS Code and Copilot CLI is in [COPILOT.md](COPILOT.md).
+
 ## Skills
 
 | Skill | What it does |
