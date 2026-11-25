@@ -52,9 +52,9 @@
     {
       "name": "dotnet-pack",
       "source": "./packs/dotnet",
-      "displayName": ".NET Pack (Span, legacy .NET Framework, WinForms)",
-      "description": ".NET-only skills: Span<T>/Memory<T> refactoring, packages.config to Central Package Management migration, classic ADO.NET auditing, and safe WinForms maintenance, plus a legacy sample with 19 planted issues.",
-      "version": "1.0.0",
+      "displayName": ".NET Pack (legacy .NET Framework + Migration Pack to .NET 10)",
+      "description": ".NET-only skills and agents: Span<T>/Memory<T> refactoring, packages.config to Central Package Management, classic ADO.NET auditing, safe WinForms maintenance - plus the Migration Pack (beta) for .NET Framework to .NET 10: an HTML assessment report with diagrams, effort with and without AI, parity tests, a YARP strangler setup and slice-by-slice migration of WebForms, MVC 5, Web API 2, WCF and EF6. Includes a runnable legacy sample app.",
+      "version": "1.1.0",
       "author": {
         "name": "Stefan Đokić (TheCodeMan)"
       },
@@ -68,11 +68,19 @@
         "legacy",
         "dotnet-framework",
         "winforms",
-        "span"
+        "span",
+        "migration",
+        "webforms",
+        "wcf",
+        "ef6",
+        "dotnet10"
       ],
       "strict": false,
       "skills": [
         "./skills/"
+      ],
+      "agents": [
+        "./agents/dotnet-migration-orchestrator.md"
       ]
     }
   ]

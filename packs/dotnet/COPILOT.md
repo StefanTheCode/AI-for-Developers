@@ -1,6 +1,6 @@
-# Legacy Pack with GitHub Copilot
+# .NET Pack with GitHub Copilot (Legacy + Migration)
 
-The Legacy Pack works with GitHub Copilot as well as with Claude Code. Use this guide for Visual Studio 2026, VS Code or Copilot CLI.
+The Legacy Pack and the Migration Pack (beta) work with GitHub Copilot as well as with Claude Code. Use this guide for Visual Studio 2026, VS Code or Copilot CLI.
 
 ## What's in the pack
 
@@ -12,6 +12,15 @@ The Legacy Pack works with GitHub Copilot as well as with Claude Code. Use this 
 | Skill | `span-memory-refactor` | `Span<T>` / `Memory<T>` refactors for hot parsing code |
 | Agent | `legacy-modernization-assistant` | Assesses a .NET Framework codebase and gives you a staged modernization roadmap |
 | Agent | `framework-upgrade-agent` | Plans and runs the version bumps (.NET Framework → modern .NET, TFM upgrades) |
+| Skill | `migration-assessment-report` | **Migration Pack (beta).** HTML report with diagrams: what has to change, effort with and without AI, a target per WebForms page |
+| Skill | `migration-safety-net` | Parity baselines, flow tests and characterization tests that the new app has to pass |
+| Skill | `yarp-strangler-setup` | A .NET 10 host in front of the old app: YARP, remote session, remote auth |
+| Skill | `webforms-page-migrator` | One WebForms page → Razor Pages / Blazor Server, same URL and behavior |
+| Skill | `aspnet-mvc-webapi-migrator` | MVC 5 / Web API 2 controllers → ASP.NET Core, same routes and JSON |
+| Skill | `wcf-service-migrator` | WCF → CoreWCF with the same contract, so clients don't change |
+| Skill | `ef6-to-efcore-migrator` | EF 6.5 on .NET 10 first, then EF Core context by context |
+| Skill | `legacy-config-auth-migrator` | `web.config`, Forms auth, machineKey, session, BinaryFormatter |
+| Agent | `dotnet-migration-orchestrator` | Runs the migration slice by slice, keeps the state in `migration/MIGRATION.md`, stops for a person at every decision |
 
 - **Skills:** the same `SKILL.md` files Claude Code uses. Copilot reads them without changes.
 - **Agents:** they have Copilot editions in `copilot/agents/*.agent.md`. The instructions are the same, only the header differs, because Copilot agents use their own tool names.
@@ -60,9 +69,12 @@ your-legacy-solution/
     ├── skills/
     │   ├── adonet-data-access-auditor/SKILL.md
     │   ├── legacy-package-migrator/SKILL.md
-    │   ├── span-memory-refactor/SKILL.md
-    │   └── winforms-maintainer/SKILL.md
+    │   ├── migration-assessment-report/SKILL.md   (+ scripts/, assets/, references/)
+    │   ├── migration-safety-net/SKILL.md
+    │   ├── ...                                    (12 skills in total)
+    │   └── yarp-strangler-setup/SKILL.md
     └── agents/
+        ├── dotnet-migration-orchestrator.agent.md
         ├── framework-upgrade-agent.agent.md
         └── legacy-modernization-assistant.agent.md
 ```
@@ -80,7 +92,7 @@ copilot plugin marketplace add StefanTheCode/AI-for-Developers
 copilot plugin install dotnet-pack@thecodeman-ai-toolkit
 ```
 
-This installs the 4 legacy skills. The plugin agents are in Claude Code format, so for the two agents copy the `.agent.md` files to `~/.copilot/agents/` (or `.github/agents/` in your repo):
+This installs the pack's 12 skills (4 legacy + 8 migration). The plugin agents are in Claude Code format, so for the three agents copy the `.agent.md` files to `~/.copilot/agents/` (or `.github/agents/` in your repo):
 
 ```powershell
 New-Item -ItemType Directory -Force "$HOME\.copilot\agents" | Out-Null
@@ -143,11 +155,48 @@ Assess this solution and give me a staged migration plan.
 
 The sample is meant to be broken, so it won't build. Compare what Copilot finds with `VALIDATION-REPORT.md`. The 19/19 baseline was measured with Claude Code. In Copilot, results depend on the model you pick.
 
+## Try the Migration Pack on LegacyShop
+
+`examples/legacy-shop` is a .NET Framework 4.8 web shop that builds and runs: WebForms, Web API 2, MVC 5, WCF and EF6. Copy it to a throwaway folder together with the pack:
+
+```powershell
+$pack = ".\AI-for-Developers\packs\dotnet"
+$demo = "C:\temp\legacy-shop-demo"
+
+New-Item -ItemType Directory -Force "$demo\.github\skills", "$demo\.github\agents" | Out-Null
+Copy-Item "$pack\skills\*" "$demo\.github\skills\" -Recurse -Force
+Copy-Item "$pack\copilot\agents\*.agent.md" "$demo\.github\agents\" -Force
+Copy-Item "$pack\examples\legacy-shop\*" "$demo\" -Recurse -Force
+Rename-Item "$demo\migration" "migration-example"   # the report the pack generated, to compare with yours
+git -C $demo init
+git -C $demo add .
+git -C $demo commit -m "LegacyShop baseline"
+```
+
+You need the .NET 10 SDK for the report scripts, and Visual Studio with the **ASP.NET and web development** workload to build and run the old app. Check that it runs first: `cd C:\temp\legacy-shop-demo` and `.\verify.ps1` (17 checks, PASS/FAIL table).
+
+Open the folder in VS Code (or `LegacyShop.sln` in Visual Studio), Agent mode, and run:
+
+```text
+Assess LegacyShop.sln for migration to .NET 10.
+```
+
+You get `migration/migration-assessment.html`. Open it in a browser and compare it with `migration-example/` and `TRAPS.md` (the answer key: 29 traps, 9 quirks).
+
+Then pick the `dotnet-migration-orchestrator` agent:
+
+```text
+Migrate this solution to .NET 10. Start with phase 1.
+```
+
+It asks you the decisions from the report first, then builds the safety net, the new host and moves one slice per commit. Come back later with `Continue the migration`. Pick a strong reasoning model - this is a long job.
+
 ## Troubleshooting
 
 - **A skill doesn't show up:** the path must be `.github/skills/<skill-name>/SKILL.md`, and the folder name must match `name:` in the file. In Copilot CLI, run `/skills reload`.
 - **An agent isn't in the picker:** the file must be in `.github/agents/` and end with `.agent.md`. Reopen the solution or reload the window.
 - **Visual Studio ignores everything:** check that you're on 18.5+ and in **Agent** mode.
+- **The assessment fails to run its scripts:** they need the .NET 10 SDK (`dotnet --version` should say 10.x). The scripts are `dotnet run scan.cs` / `dotnet run render.cs`, nothing to install.
 - **Copilot asks before running commands:** that's normal. The agents run `dotnet build` / `dotnet test` and code searches, and Copilot asks for approval. Approve what you're comfortable with.
 
 Questions or something not working? Post it in the [AI for Developers community](https://www.skool.com/ai-for-developers/about).

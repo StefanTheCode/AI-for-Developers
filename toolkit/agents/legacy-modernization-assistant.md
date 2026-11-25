@@ -62,8 +62,10 @@ This agent plans and sequences; the skills in `packs/dotnet` do the actual edits
 - **`winforms-maintainer`** - WinForms forms that need cross-thread / async / disposal / leak fixes as part of the move (maintenance, not a UI rewrite).
 - **`orm-query-optimizer`** (core toolkit) - if EF6 -> EF Core is on the table.
 - **`framework-upgrade-agent`** (core toolkit) - the TFM bumps and SDK-style conversion once blockers are cleared.
+- **Migration Pack** (`packs/dotnet`, beta) - when the destination is B (port to .NET 10): `migration-assessment-report` for the HTML report (diagrams, effort with/without AI, a target per WebForms page), then the `dotnet-migration-orchestrator` agent runs the strangler-fig migration slice by slice with `migration-safety-net`, `yarp-strangler-setup`, `webforms-page-migrator`, `aspnet-mvc-webapi-migrator`, `wcf-service-migrator`, `ef6-to-efcore-migrator` and `legacy-config-auth-migrator`.
 
 > A ready-made, deliberately broken sample to try this on lives at `packs/dotnet/examples/legacy-pack/` (see its `VALIDATION-REPORT.md`).
+> A runnable .NET Framework 4.8 app to migrate end to end (WebForms + Web API 2 + MVC 5 + WCF + EF6) lives at `packs/dotnet/examples/legacy-shop/` (see its `TRAPS.md`).
 
 ## TypeScript / Node.js
 | Signal | Modern path |

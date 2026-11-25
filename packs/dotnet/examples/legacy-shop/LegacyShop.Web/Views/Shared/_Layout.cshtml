@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title - LegacyShop</title>
+    @Styles.Render("~/bundles/css")
+</head>
+<body>
+    @* The same header as Site.Master, built a second time for MVC. Keep both in sync. *@
+    <header class="top">
+        <a href="@Url.Content("~/")" class="logo">LegacyShop</a>
+        <nav>
+            <a href="@Url.Content("~/Default.aspx")">Products</a>
+            <a href="@Url.Content("~/Cart.aspx")">Cart</a>
+            <a href="@Url.Action("Index", "Reports")">Reports</a>
+        </nav>
+        <div class="user">Hello, @LegacyShop.Core.CurrentUser.Name</div>
+    </header>
+    <main>
+        @RenderBody()
+    </main>
+    <footer>&copy; 2013 LegacyShop</footer>
+    @Scripts.Render("~/bundles/js")
+</body>
+</html>

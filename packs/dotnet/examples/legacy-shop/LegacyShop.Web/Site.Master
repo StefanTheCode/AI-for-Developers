@@ -1,0 +1,36 @@
+<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.Master.cs" Inherits="LegacyShop.Web.SiteMaster" %>
+<%@ Register Src="~/Controls/MiniCart.ascx" TagPrefix="shop" TagName="MiniCart" %>
+<!DOCTYPE html>
+<html>
+<head runat="server">
+    <meta charset="utf-8" />
+    <title>LegacyShop</title>
+    <asp:PlaceHolder runat="server"><%: System.Web.Optimization.Styles.Render("~/bundles/css") %></asp:PlaceHolder>
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server" />
+</head>
+<body>
+    <form id="MainForm" runat="server">
+        <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePartialRendering="true" />
+        <header class="top">
+            <a href="~/" runat="server" class="logo">LegacyShop</a>
+            <nav>
+                <a href="~/Default.aspx" runat="server">Products</a>
+                <a href="~/Cart.aspx" runat="server">Cart</a>
+                <a href="~/Reports" runat="server">Reports</a>
+                <asp:HyperLink ID="AdminLink" runat="server" NavigateUrl="~/Admin/Products.aspx" Text="Admin" Visible="false" />
+            </nav>
+            <div class="user">
+                <asp:Label ID="UserLabel" runat="server" />
+                <asp:HyperLink ID="LoginLink" runat="server" NavigateUrl="~/Account/Login.aspx" Text="Sign in" />
+                <asp:LinkButton ID="LogoutButton" runat="server" Text="Sign out" OnClick="LogoutButton_Click" CausesValidation="false" Visible="false" />
+            </div>
+            <shop:MiniCart ID="MiniCart" runat="server" />
+        </header>
+        <main>
+            <asp:ContentPlaceHolder ID="MainContent" runat="server" />
+        </main>
+        <footer>&copy; 2013 LegacyShop</footer>
+    </form>
+    <asp:PlaceHolder runat="server"><%: System.Web.Optimization.Scripts.Render("~/bundles/js") %></asp:PlaceHolder>
+</body>
+</html>

@@ -1,0 +1,1199 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-11-25 15:32",
+  "tool": "AI for Developers Toolkit - Migration Pack (beta)",
+  "solution": {
+    "name": "LegacyShop",
+    "path": "LegacyShop.sln"
+  },
+  "summary": {
+    "verdict": "go-with-conditions",
+    "headline": "A small app with every classic .NET Framework trap in it. Worth moving incrementally - after two decisions: how sign-in and the session cart work while both apps run.",
+    "destination": "Port to .NET 10 incrementally (strangler fig): new ASP.NET Core host with YARP in front, System.Web adapters for shared code, CoreWCF for the inventory service, EF 6.5 as a bridge before EF Core.",
+    "verdictReason": "Nothing blocks the move for good: the 4 hard blockers (HttpContext.Current in a library, BinaryFormatter, the WCF server, System.Web in a library) all have known fixes. The risk is behavior, not code - 9 pricing and cart quirks that customers see. Lock them with parity tests before touching anything, then move the read-only pages and the API first."
+  },
+  "projects": [
+    {
+      "name": "LegacyShop.Core",
+      "path": "LegacyShop.Core/LegacyShop.Core.csproj",
+      "kind": "library",
+      "sdkStyle": false,
+      "targetFramework": "v4.8",
+      "loc": 128,
+      "packagesConfig": false,
+      "usesSystemWeb": true,
+      "projectReferences": [],
+      "fileCounts": {
+        "aspx": 0,
+        "ascx": 0,
+        "master": 0,
+        "ashx": 0,
+        "svc": 0,
+        "cshtml": 0,
+        "edmx": 0,
+        "cs": 4
+      },
+      "packages": []
+    },
+    {
+      "name": "LegacyShop.Data",
+      "path": "LegacyShop.Data/LegacyShop.Data.csproj",
+      "kind": "library",
+      "sdkStyle": false,
+      "targetFramework": "v4.8",
+      "loc": 304,
+      "packagesConfig": true,
+      "usesSystemWeb": false,
+      "projectReferences": [],
+      "fileCounts": {
+        "aspx": 0,
+        "ascx": 0,
+        "master": 0,
+        "ashx": 0,
+        "svc": 0,
+        "cshtml": 0,
+        "edmx": 0,
+        "cs": 11
+      },
+      "packages": [
+        {
+          "id": "EntityFramework",
+          "version": "6.4.4",
+          "status": "bridge",
+          "note": "EF 6.5 runs on .NET 10; EF Core is the long-term target."
+        }
+      ]
+    },
+    {
+      "name": "LegacyShop.Inventory",
+      "path": "LegacyShop.Inventory/LegacyShop.Inventory.csproj",
+      "kind": "wcf",
+      "sdkStyle": false,
+      "targetFramework": "v4.8",
+      "loc": 89,
+      "packagesConfig": true,
+      "usesSystemWeb": true,
+      "projectReferences": [
+        "LegacyShop.Data"
+      ],
+      "fileCounts": {
+        "aspx": 0,
+        "ascx": 0,
+        "master": 0,
+        "ashx": 0,
+        "svc": 1,
+        "cshtml": 0,
+        "edmx": 0,
+        "cs": 3
+      },
+      "packages": [
+        {
+          "id": "EntityFramework",
+          "version": "6.4.4",
+          "status": "bridge",
+          "note": "EF 6.5 runs on .NET 10; EF Core is the long-term target."
+        }
+      ]
+    },
+    {
+      "name": "LegacyShop.Web",
+      "path": "LegacyShop.Web/LegacyShop.Web.csproj",
+      "kind": "web",
+      "sdkStyle": false,
+      "targetFramework": "v4.8",
+      "loc": 877,
+      "packagesConfig": true,
+      "usesSystemWeb": true,
+      "projectReferences": [
+        "LegacyShop.Core",
+        "LegacyShop.Data"
+      ],
+      "fileCounts": {
+        "aspx": 6,
+        "ascx": 1,
+        "master": 1,
+        "ashx": 1,
+        "svc": 0,
+        "cshtml": 4,
+        "edmx": 0,
+        "cs": 28
+      },
+      "packages": [
+        {
+          "id": "Antlr",
+          "version": "3.5.0.2",
+          "status": "remove",
+          "note": "Bundling - not used in ASP.NET Core."
+        },
+        {
+          "id": "EntityFramework",
+          "version": "6.4.4",
+          "status": "bridge",
+          "note": "EF 6.5 runs on .NET 10; EF Core is the long-term target."
+        },
+        {
+          "id": "Microsoft.AspNet.Mvc",
+          "version": "5.2.9",
+          "status": "replace",
+          "note": "Built into ASP.NET Core."
+        },
+        {
+          "id": "Microsoft.AspNet.Razor",
+          "version": "3.2.9",
+          "status": "replace",
+          "note": "Built into ASP.NET Core."
+        },
+        {
+          "id": "Microsoft.AspNet.Web.Optimization",
+          "version": "1.1.3",
+          "status": "remove",
+          "note": "Bundling - not used in ASP.NET Core."
+        },
+        {
+          "id": "Microsoft.AspNet.WebApi",
+          "version": "5.2.9",
+          "status": "replace",
+          "note": "ASP.NET Core controllers / minimal APIs (WebApi.Client has a .NET Standard build if clients need it)."
+        },
+        {
+          "id": "Microsoft.AspNet.WebApi.Client",
+          "version": "5.2.9",
+          "status": "replace",
+          "note": "ASP.NET Core controllers / minimal APIs (WebApi.Client has a .NET Standard build if clients need it)."
+        },
+        {
+          "id": "Microsoft.AspNet.WebApi.Core",
+          "version": "5.2.9",
+          "status": "replace",
+          "note": "ASP.NET Core controllers / minimal APIs (WebApi.Client has a .NET Standard build if clients need it)."
+        },
+        {
+          "id": "Microsoft.AspNet.WebApi.WebHost",
+          "version": "5.2.9",
+          "status": "replace",
+          "note": "ASP.NET Core controllers / minimal APIs (WebApi.Client has a .NET Standard build if clients need it)."
+        },
+        {
+          "id": "Microsoft.AspNet.WebPages",
+          "version": "3.2.9",
+          "status": "replace",
+          "note": "Built into ASP.NET Core."
+        },
+        {
+          "id": "Microsoft.Web.Infrastructure",
+          "version": "2.0.0",
+          "status": "remove",
+          "note": "System.Web plumbing."
+        },
+        {
+          "id": "Newtonsoft.Json",
+          "version": "12.0.3",
+          "status": "ok",
+          "note": "Has .NET Standard builds. Check the version for known advisories; consider System.Text.Json."
+        },
+        {
+          "id": "WebGrease",
+          "version": "1.6.0",
+          "status": "remove",
+          "note": "Bundling - not used in ASP.NET Core."
+        }
+      ]
+    }
+  ],
+  "units": [
+    {
+      "id": "library-legacyshop-core",
+      "kind": "library",
+      "name": "LegacyShop.Core",
+      "project": "LegacyShop.Core",
+      "file": "LegacyShop.Core/LegacyShop.Core.csproj",
+      "size": "S",
+      "category": "mechanical",
+      "hoursLow": 2,
+      "hoursHigh": 4,
+      "target": "netstandard2.0 or net10.0 (multi-target during the move)",
+      "targetReason": "Move libraries first (bottom-up), so both the old and the new app can use them.",
+      "metrics": {
+        "loc": 128
+      },
+      "notes": [
+        "References System.Web - needs Microsoft.AspNetCore.SystemWebAdapters or an abstraction."
+      ],
+      "humanTasks": []
+    },
+    {
+      "id": "ef-context-shopcontext",
+      "kind": "ef-context",
+      "name": "ShopContext",
+      "project": "LegacyShop.Data",
+      "file": "LegacyShop.Data/ShopContext.cs",
+      "size": "S",
+      "category": "translation",
+      "hoursLow": 6.5,
+      "hoursHigh": 16.2,
+      "target": "EF 6.5 on .NET 10 first, then EF Core",
+      "targetReason": "EF 6.5 runs on .NET 10, so the data layer can move without a rewrite. Port to EF Core per context, behind query parity tests.",
+      "metrics": {
+        "dbSets": 5,
+        "ef6OnlyApiHits": 8
+      },
+      "notes": [
+        "Lazy loading via virtual navigations - EF Core needs Include or proxies.",
+        "Database initializer + Seed - no EF Core equivalent."
+      ],
+      "humanTasks": [
+        "Decide Restrict vs Cascade for Product -> OrderLine"
+      ]
+    },
+    {
+      "id": "library-legacyshop-data",
+      "kind": "library",
+      "name": "LegacyShop.Data",
+      "project": "LegacyShop.Data",
+      "file": "LegacyShop.Data/LegacyShop.Data.csproj",
+      "size": "S",
+      "category": "mechanical",
+      "hoursLow": 2,
+      "hoursHigh": 4,
+      "target": "netstandard2.0 or net10.0 (multi-target during the move)",
+      "targetReason": "Move libraries first (bottom-up), so both the old and the new app can use them.",
+      "metrics": {
+        "loc": 304
+      },
+      "notes": [],
+      "humanTasks": []
+    },
+    {
+      "id": "wcf-service-iinventoryservice",
+      "kind": "wcf-service",
+      "name": "IInventoryService",
+      "project": "LegacyShop.Inventory",
+      "file": "LegacyShop.Inventory/IInventoryService.cs",
+      "size": "S",
+      "category": "translation",
+      "hoursLow": 3.5,
+      "hoursHigh": 8.5,
+      "target": "CoreWCF (same contract)",
+      "targetReason": "CoreWCF keeps the SOAP contract, so existing clients keep working. gRPC/REST only if you also own every client.",
+      "metrics": {
+        "operations": 3,
+        "faultContracts": 1
+      },
+      "notes": [],
+      "humanTasks": []
+    },
+    {
+      "id": "webforms-page-cart-aspx",
+      "kind": "webforms-page",
+      "name": "Cart.aspx",
+      "project": "LegacyShop.Web",
+      "file": "LegacyShop.Web/Cart.aspx",
+      "size": "M",
+      "category": "translation",
+      "hoursLow": 4,
+      "hoursHigh": 8,
+      "target": "Razor Pages",
+      "targetReason": "Uses session state, and interactive Blazor has no HttpContext or session. Postback handlers map to Razor Pages handlers.",
+      "metrics": {
+        "serverControls": 18,
+        "updatePanels": 0,
+        "dataControls": 1,
+        "validators": 0,
+        "postbackHandlers": 4,
+        "viewStateUses": 0,
+        "sessionUses": 5,
+        "inlineDataAccess": 0,
+        "authCalls": 0,
+        "inlineEditGrid": 0,
+        "userControls": 0,
+        "codeBehindLoc": 93,
+        "complexityPoints": 14.4
+      },
+      "notes": [
+        "Uses session (directly or through a helper)."
+      ],
+      "humanTasks": [
+        "Decide whether the stored order total should include coupon, shipping and VAT (quirk Q4)"
+      ]
+    },
+    {
+      "id": "webforms-page-product-aspx",
+      "kind": "webforms-page",
+      "name": "Product.aspx",
+      "project": "LegacyShop.Web",
+      "file": "LegacyShop.Web/Product.aspx",
+      "size": "M",
+      "category": "translation",
+      "hoursLow": 4,
+      "hoursHigh": 8,
+      "target": "Razor Pages",
+      "targetReason": "Uses session state, and interactive Blazor has no HttpContext or session. Keep it a page; replace the UpdatePanel with a small fetch to a page handler.",
+      "metrics": {
+        "serverControls": 15,
+        "updatePanels": 1,
+        "dataControls": 0,
+        "validators": 2,
+        "postbackHandlers": 1,
+        "viewStateUses": 6,
+        "sessionUses": 1,
+        "inlineDataAccess": 0,
+        "authCalls": 0,
+        "inlineEditGrid": 0,
+        "userControls": 0,
+        "codeBehindLoc": 77,
+        "complexityPoints": 16.4
+      },
+      "notes": [
+        "Keeps data in ViewState (6 uses) - make that state explicit.",
+        "Uses session (directly or through a helper).",
+        "UpdatePanel partial postbacks."
+      ],
+      "humanTasks": [
+        "Decide whether 'Add to cart' keeps the price from page load (quirk Q3)"
+      ]
+    },
+    {
+      "id": "master-page-site-master",
+      "kind": "master-page",
+      "name": "Site.Master",
+      "project": "LegacyShop.Web",
+      "file": "LegacyShop.Web/Site.Master",
+      "size": "S",
+      "category": "translation",
+      "hoursLow": 1,
+      "hoursHigh": 2,
+      "target": "Layout (+ view component)",
+      "targetReason": "Master pages become a shared layout; code-behind logic moves into a view component or partial.",
+      "metrics": {
+        "serverControls": 9,
+        "updatePanels": 0,
+        "dataControls": 0,
+        "validators": 0,
+        "postbackHandlers": 1,
+        "viewStateUses": 0,
+        "sessionUses": 1,
+        "inlineDataAccess": 0,
+        "authCalls": 1,
+        "inlineEditGrid": 0,
+        "userControls": 1,
+        "codeBehindLoc": 24,
+        "complexityPoints": 4.9
+      },
+      "notes": [
+        "Uses session (directly or through a helper)."
+      ],
+      "humanTasks": []
+    },
+    {
+      "id": "webforms-page-default-aspx",
+      "kind": "webforms-page",
+      "name": "Default.aspx",
+      "project": "LegacyShop.Web",
+      "file": "LegacyShop.Web/Default.aspx",
+      "size": "M",
+      "category": "translation",
+      "hoursLow": 4,
+      "hoursHigh": 8,
+      "target": "Razor Pages",
+      "targetReason": "List/form page: postback handlers map to Razor Pages handlers, GET pages stay linkable and cacheable.",
+      "metrics": {
+        "serverControls": 8,
+        "updatePanels": 0,
+        "dataControls": 2,
+        "validators": 0,
+        "postbackHandlers": 3,
+        "viewStateUses": 2,
+        "sessionUses": 0,
+        "inlineDataAccess": 0,
+        "authCalls": 0,
+        "inlineEditGrid": 0,
+        "userControls": 0,
+        "codeBehindLoc": 58,
+        "complexityPoints": 12
+      },
+      "notes": [
+        "Keeps data in ViewState (2 uses) - make that state explicit."
+      ],
+      "humanTasks": []
+    },
+    {
+      "id": "webforms-page-error-aspx",
+      "kind": "webforms-page",
+      "name": "Error.aspx",
+      "project": "LegacyShop.Web",
+      "file": "LegacyShop.Web/Error.aspx",
+      "size": "S",
+      "category": "translation",
+      "hoursLow": 2,
+      "hoursHigh": 4,
+      "target": "Razor Pages",
+      "targetReason": "List/form page: postback handlers map to Razor Pages handlers, GET pages stay linkable and cacheable.",
+      "metrics": {
+        "serverControls": 0,
+        "updatePanels": 0,
+        "dataControls": 0,
+        "validators": 0,
+        "postbackHandlers": 0,
+        "viewStateUses": 0,
+        "sessionUses": 0,
+        "inlineDataAccess": 0,
+        "authCalls": 0,
+        "inlineEditGrid": 0,
+        "userControls": 0,
+        "codeBehindLoc": 0,
+        "complexityPoints": 0
+      },
+      "notes": [],
+      "humanTasks": []
+    },
+    {
+      "id": "webforms-page-admin-products-aspx",
+      "kind": "webforms-page",
+      "name": "Admin/Products.aspx",
+      "project": "LegacyShop.Web",
+      "file": "LegacyShop.Web/Admin/Products.aspx",
+      "size": "L",
+      "category": "translation",
+      "hoursLow": 10,
+      "hoursHigh": 18,
+      "target": "Blazor (Interactive Server)",
+      "targetReason": "Heavy in-page interactivity (0 UpdatePanel, inline grid editing: yes, 5 postback handlers) maps to components better than to page handlers.",
+      "metrics": {
+        "serverControls": 25,
+        "updatePanels": 0,
+        "dataControls": 2,
+        "validators": 6,
+        "postbackHandlers": 5,
+        "viewStateUses": 0,
+        "sessionUses": 0,
+        "inlineDataAccess": 5,
+        "authCalls": 0,
+        "inlineEditGrid": 1,
+        "userControls": 0,
+        "codeBehindLoc": 104,
+        "complexityPoints": 33.6
+      },
+      "notes": [
+        "Talks to the database from code-behind - extract a service first."
+      ],
+      "humanTasks": [
+        "Confirm Blazor is fine for the admin area (only admins use it)"
+      ]
+    },
+    {
+      "id": "user-control-controls-minicart-ascx",
+      "kind": "user-control",
+      "name": "Controls/MiniCart.ascx",
+      "project": "LegacyShop.Web",
+      "file": "LegacyShop.Web/Controls/MiniCart.ascx",
+      "size": "S",
+      "category": "translation",
+      "hoursLow": 1,
+      "hoursHigh": 2,
+      "target": "View component (Razor Pages) or Blazor component",
+      "targetReason": "Pick the same technology as the pages that host it.",
+      "metrics": {
+        "serverControls": 3,
+        "updatePanels": 0,
+        "dataControls": 0,
+        "validators": 0,
+        "postbackHandlers": 0,
+        "viewStateUses": 0,
+        "sessionUses": 3,
+        "inlineDataAccess": 0,
+        "authCalls": 0,
+        "inlineEditGrid": 0,
+        "userControls": 0,
+        "codeBehindLoc": 18,
+        "complexityPoints": 2.6
+      },
+      "notes": [
+        "Uses session (directly or through a helper)."
+      ],
+      "humanTasks": []
+    },
+    {
+      "id": "webforms-page-account-login-aspx",
+      "kind": "webforms-page",
+      "name": "Account/Login.aspx",
+      "project": "LegacyShop.Web",
+      "file": "LegacyShop.Web/Account/Login.aspx",
+      "size": "S",
+      "category": "translation",
+      "hoursLow": 2,
+      "hoursHigh": 4,
+      "target": "Razor Pages",
+      "targetReason": "Signs users in/out or writes cookies - needs a real HTTP request, which interactive Blazor doesn't have.",
+      "metrics": {
+        "serverControls": 9,
+        "updatePanels": 0,
+        "dataControls": 0,
+        "validators": 2,
+        "postbackHandlers": 1,
+        "viewStateUses": 0,
+        "sessionUses": 0,
+        "inlineDataAccess": 0,
+        "authCalls": 5,
+        "inlineEditGrid": 0,
+        "userControls": 0,
+        "codeBehindLoc": 38,
+        "complexityPoints": 4.8
+      },
+      "notes": [],
+      "humanTasks": []
+    },
+    {
+      "id": "http-handler-handlers-productimage-ashx",
+      "kind": "http-handler",
+      "name": "Handlers/ProductImage.ashx",
+      "project": "LegacyShop.Web",
+      "file": "LegacyShop.Web/Handlers/ProductImage.ashx",
+      "size": "S",
+      "category": "translation",
+      "hoursLow": 1,
+      "hoursHigh": 3,
+      "target": "Minimal API endpoint or middleware",
+      "targetReason": "One handler = one endpoint. Keep the URL so links and caches keep working.",
+      "metrics": {},
+      "notes": [],
+      "humanTasks": []
+    },
+    {
+      "id": "global-asax-global-asax",
+      "kind": "global-asax",
+      "name": "Global.asax",
+      "project": "LegacyShop.Web",
+      "file": "LegacyShop.Web/Global.asax.cs",
+      "size": "M",
+      "category": "translation",
+      "hoursLow": 3,
+      "hoursHigh": 6,
+      "target": "Program.cs + middleware",
+      "targetReason": "Lifecycle events move to Program.cs, middleware and hosted services.",
+      "metrics": {
+        "events": 5
+      },
+      "notes": [
+        "Events: Application_Start, Session_Start, Session_End, Application_PostAuthenticateRequest, Application_Error.",
+        "Session_End has no ASP.NET Core equivalent."
+      ],
+      "humanTasks": []
+    },
+    {
+      "id": "webapi-controller-productscontroller",
+      "kind": "webapi-controller",
+      "name": "ProductsController",
+      "project": "LegacyShop.Web",
+      "file": "LegacyShop.Web/Api/ProductsController.cs",
+      "size": "M",
+      "category": "translation",
+      "hoursLow": 3,
+      "hoursHigh": 6,
+      "target": "ASP.NET Core controller",
+      "targetReason": "Same routes and status codes; IHttpActionResult -> IActionResult.",
+      "metrics": {
+        "actions": 4
+      },
+      "notes": [],
+      "humanTasks": []
+    },
+    {
+      "id": "webapi-controller-orderscontroller",
+      "kind": "webapi-controller",
+      "name": "OrdersController",
+      "project": "LegacyShop.Web",
+      "file": "LegacyShop.Web/Api/OrdersController.cs",
+      "size": "S",
+      "category": "translation",
+      "hoursLow": 1,
+      "hoursHigh": 3,
+      "target": "ASP.NET Core controller",
+      "targetReason": "Same routes and status codes; IHttpActionResult -> IActionResult.",
+      "metrics": {
+        "actions": 1
+      },
+      "notes": [
+        "Uses HttpContext.Current (directly or through a helper)."
+      ],
+      "humanTasks": [
+        "Accept 401 instead of 302 for unauthenticated calls"
+      ]
+    },
+    {
+      "id": "mvc-controller-reportscontroller",
+      "kind": "mvc-controller",
+      "name": "ReportsController",
+      "project": "LegacyShop.Web",
+      "file": "LegacyShop.Web/Controllers/ReportsController.cs",
+      "size": "S",
+      "category": "translation",
+      "hoursLow": 3,
+      "hoursHigh": 6,
+      "target": "ASP.NET Core MVC controller + views",
+      "targetReason": "Views mostly carry over; HTML helpers -> tag helpers where it helps.",
+      "metrics": {
+        "actions": 2,
+        "childActions": 1
+      },
+      "notes": [
+        "Child actions become view components.",
+        "[OutputCache] -> ASP.NET Core output caching middleware."
+      ],
+      "humanTasks": []
+    },
+    {
+      "id": "http-module-requesttimingmodule",
+      "kind": "http-module",
+      "name": "RequestTimingModule",
+      "project": "LegacyShop.Web",
+      "file": "LegacyShop.Web/Modules/RequestTimingModule.cs",
+      "size": "S",
+      "category": "translation",
+      "hoursLow": 1,
+      "hoursHigh": 3,
+      "target": "Middleware",
+      "targetReason": "Module events become a middleware component.",
+      "metrics": {},
+      "notes": [],
+      "humanTasks": []
+    }
+  ],
+  "crossCutting": [
+    {
+      "id": "safety-net",
+      "name": "Safety net: parity + characterization tests",
+      "category": "verification",
+      "hoursLow": 18,
+      "hoursHigh": 45,
+      "humanTasks": [
+        "Decide what \"the same behavior\" means (which differences are OK)",
+        "Review the recorded requests and the normalization rules"
+      ]
+    },
+    {
+      "id": "strangler-host",
+      "name": "New .NET 10 host with YARP + System.Web adapters",
+      "category": "environment",
+      "hoursLow": 8,
+      "hoursHigh": 16,
+      "humanTasks": [
+        "Hosting decision (IIS, containers, cloud)",
+        "Routing and TLS in front of both apps"
+      ]
+    },
+    {
+      "id": "auth-decision",
+      "name": "Authentication & authorization design",
+      "category": "decision",
+      "hoursLow": 4,
+      "hoursHigh": 8,
+      "humanTasks": [
+        "Cookie auth vs Identity vs external IdP",
+        "Shared sign-in while both apps run (remote auth)",
+        "Role and policy model"
+      ]
+    },
+    {
+      "id": "auth-build",
+      "name": "Authentication & authorization implementation",
+      "category": "translation",
+      "hoursLow": 8,
+      "hoursHigh": 16,
+      "humanTasks": [
+        "Test sign-in, sign-out and expiry in both apps"
+      ]
+    },
+    {
+      "id": "session-decision",
+      "name": "Session state strategy",
+      "category": "decision",
+      "hoursLow": 2,
+      "hoursHigh": 4,
+      "humanTasks": [
+        "Keep session (remote/distributed) or remove it",
+        "What lives in session today and why"
+      ]
+    },
+    {
+      "id": "session-build",
+      "name": "Session state implementation",
+      "category": "translation",
+      "hoursLow": 4,
+      "hoursHigh": 8,
+      "humanTasks": []
+    },
+    {
+      "id": "config",
+      "name": "Configuration: web.config -> appsettings + Options",
+      "category": "mechanical",
+      "hoursLow": 2,
+      "hoursHigh": 5,
+      "humanTasks": [
+        "Where secrets live in production"
+      ]
+    },
+    {
+      "id": "data-protection",
+      "name": "machineKey -> Data Protection key ring",
+      "category": "decision",
+      "hoursLow": 2,
+      "hoursHigh": 6,
+      "humanTasks": [
+        "Key storage and rotation"
+      ]
+    },
+    {
+      "id": "binaryformatter",
+      "name": "Replace BinaryFormatter",
+      "category": "translation",
+      "hoursLow": 2,
+      "hoursHigh": 6,
+      "humanTasks": [
+        "Check that existing serialized data can be read or safely dropped"
+      ]
+    },
+    {
+      "id": "drawing-decision",
+      "name": "Image processing without System.Drawing",
+      "category": "decision",
+      "hoursLow": 2,
+      "hoursHigh": 4,
+      "humanTasks": [
+        "Windows hosting vs ImageSharp/SkiaSharp (licenses!)"
+      ]
+    },
+    {
+      "id": "drawing-build",
+      "name": "Port image code",
+      "category": "translation",
+      "hoursLow": 4,
+      "hoursHigh": 8,
+      "humanTasks": []
+    },
+    {
+      "id": "wcf-clients",
+      "name": "WCF clients: config -> code",
+      "category": "translation",
+      "hoursLow": 2,
+      "hoursHigh": 4,
+      "humanTasks": []
+    },
+    {
+      "id": "bundling",
+      "name": "Static assets and bundling",
+      "category": "mechanical",
+      "hoursLow": 2,
+      "hoursHigh": 4,
+      "humanTasks": []
+    },
+    {
+      "id": "packaging",
+      "name": "SDK-style projects + PackageReference + CPM",
+      "category": "mechanical",
+      "hoursLow": 4,
+      "hoursHigh": 8,
+      "humanTasks": []
+    },
+    {
+      "id": "rollout",
+      "name": "Deployment, CI/CD and rollout",
+      "category": "environment",
+      "hoursLow": 8,
+      "hoursHigh": 20,
+      "humanTasks": [
+        "Release plan, monitoring, rollback",
+        "Who signs off each switched route"
+      ]
+    },
+    {
+      "id": "decommission",
+      "name": "Remove YARP fallback + adapters, shut down the old app",
+      "category": "environment",
+      "hoursLow": 2,
+      "hoursHigh": 4,
+      "humanTasks": [
+        "Final go/no-go"
+      ]
+    }
+  ],
+  "blockers": [
+    {
+      "signal": "HttpContext.Current",
+      "severity": "hard",
+      "count": 9,
+      "files": [
+        "LegacyShop.Core/CurrentUser.cs",
+        "LegacyShop.Web/Api/OrdersController.cs",
+        "LegacyShop.Web/Infrastructure/CartSession.cs"
+      ],
+      "meaning": "Static access to the request - not available in ASP.NET Core.",
+      "fix": "IHttpContextAccessor / pass the user in; System.Web adapters while both apps run."
+    },
+    {
+      "signal": "System.Web in a library",
+      "severity": "hard",
+      "count": 2,
+      "files": [
+        "LegacyShop.Core/CurrentUser.cs"
+      ],
+      "meaning": "Class library compiled against System.Web.",
+      "fix": "Microsoft.AspNetCore.SystemWebAdapters, then remove."
+    },
+    {
+      "signal": "BinaryFormatter",
+      "severity": "hard",
+      "count": 3,
+      "files": [
+        "LegacyShop.Web/Infrastructure/DiskCache.cs"
+      ],
+      "meaning": "Removed in .NET 9+ and insecure.",
+      "fix": "System.Text.Json / MessagePack / protobuf."
+    },
+    {
+      "signal": "WCF service (server)",
+      "severity": "hard",
+      "count": 1,
+      "files": [
+        "LegacyShop.Inventory/IInventoryService.cs"
+      ],
+      "meaning": "No WCF server in .NET 10.",
+      "fix": "CoreWCF (same contract) or gRPC/REST."
+    },
+    {
+      "signal": "ViewState",
+      "severity": "medium",
+      "count": 8,
+      "files": [
+        "LegacyShop.Web/Product.aspx.cs",
+        "LegacyShop.Web/Default.aspx.cs"
+      ],
+      "meaning": "WebForms page state.",
+      "fix": "Explicit state: hidden fields, query string, component state."
+    },
+    {
+      "signal": "UpdatePanel",
+      "severity": "medium",
+      "count": 1,
+      "files": [
+        "LegacyShop.Web/Product.aspx"
+      ],
+      "meaning": "Partial postbacks.",
+      "fix": "Blazor interactivity or a small fetch + partial."
+    },
+    {
+      "signal": "Session state",
+      "severity": "medium",
+      "count": 2,
+      "files": [
+        "LegacyShop.Web/Global.asax.cs",
+        "LegacyShop.Web/Infrastructure/CartSession.cs"
+      ],
+      "meaning": "InProc session with objects.",
+      "fix": "ASP.NET Core session (serialized) or a store; remote session while both apps run."
+    },
+    {
+      "signal": "Application state",
+      "severity": "low",
+      "count": 6,
+      "files": [
+        "LegacyShop.Web/Global.asax.cs"
+      ],
+      "meaning": "Global mutable state.",
+      "fix": "Singleton service or cache."
+    },
+    {
+      "signal": "Forms authentication",
+      "severity": "medium",
+      "count": 7,
+      "files": [
+        "LegacyShop.Web/Site.Master.cs",
+        "LegacyShop.Web/Web.config",
+        "LegacyShop.Web/Account/Login.aspx.cs"
+      ],
+      "meaning": "Forms auth cookie and ticket.",
+      "fix": "ASP.NET Core cookie auth / Identity; remote authentication during the move."
+    },
+    {
+      "signal": "machineKey",
+      "severity": "medium",
+      "count": 1,
+      "files": [
+        "LegacyShop.Web/Web.config"
+      ],
+      "meaning": "Shared keys for cookies and ViewState.",
+      "fix": "Data Protection; shared key ring if cookies must work in both apps."
+    },
+    {
+      "signal": "IHttpModule",
+      "severity": "medium",
+      "count": 2,
+      "files": [
+        "LegacyShop.Web/Modules/RequestTimingModule.cs"
+      ],
+      "meaning": "HTTP module in the IIS pipeline.",
+      "fix": "Middleware."
+    },
+    {
+      "signal": "IHttpHandler / .ashx",
+      "severity": "medium",
+      "count": 2,
+      "files": [
+        "LegacyShop.Web/Handlers/ProductImage.ashx.cs"
+      ],
+      "meaning": "Custom HTTP handler.",
+      "fix": "Endpoint / middleware."
+    },
+    {
+      "signal": "System.Drawing",
+      "severity": "medium",
+      "count": 2,
+      "files": [
+        "LegacyShop.Web/Handlers/ProductImage.ashx.cs"
+      ],
+      "meaning": "GDI+ - Windows-only on .NET 6+.",
+      "fix": "ImageSharp / SkiaSharp, or stay on Windows hosting."
+    },
+    {
+      "signal": "ConfigurationManager",
+      "severity": "medium",
+      "count": 5,
+      "files": [
+        "LegacyShop.Core/AppSettings.cs"
+      ],
+      "meaning": "Reads Web.config / App.config.",
+      "fix": "IConfiguration + IOptions."
+    },
+    {
+      "signal": "WCF client config",
+      "severity": "medium",
+      "count": 4,
+      "files": [
+        "LegacyShop.Web/Web.Release.config",
+        "LegacyShop.Web/Web.config",
+        "LegacyShop.Web/Services/InventoryClient.cs"
+      ],
+      "meaning": "WCF client built from system.serviceModel config.",
+      "fix": "System.ServiceModel.* NuGet packages; endpoint and binding in code."
+    },
+    {
+      "signal": "Global.asax",
+      "severity": "medium",
+      "count": 1,
+      "files": [
+        "LegacyShop.Web/Global.asax.cs"
+      ],
+      "meaning": "Application lifecycle events.",
+      "fix": "Program.cs, middleware, hosted services."
+    },
+    {
+      "signal": "Bundling (System.Web.Optimization)",
+      "severity": "low",
+      "count": 8,
+      "files": [
+        "LegacyShop.Web/Web.config",
+        "LegacyShop.Web/Global.asax.cs",
+        "LegacyShop.Web/Views/Web.config",
+        "LegacyShop.Web/App_Start/BundleConfig.cs"
+      ],
+      "meaning": "Runtime bundling and minification.",
+      "fix": "Static files + a build-time bundler, or plain tags."
+    },
+    {
+      "signal": "Web.config transforms",
+      "severity": "low",
+      "count": 5,
+      "files": [
+        "LegacyShop.Web/Web.Release.config"
+      ],
+      "meaning": "Per-environment config via XDT.",
+      "fix": "appsettings.{Environment}.json + environment variables."
+    },
+    {
+      "signal": "MVC child actions",
+      "severity": "low",
+      "count": 3,
+      "files": [
+        "LegacyShop.Web/Controllers/ReportsController.cs",
+        "LegacyShop.Web/Views/Reports/Index.cshtml"
+      ],
+      "meaning": "Child actions.",
+      "fix": "View components."
+    },
+    {
+      "signal": "OutputCache attribute",
+      "severity": "low",
+      "count": 1,
+      "files": [
+        "LegacyShop.Web/Controllers/ReportsController.cs"
+      ],
+      "meaning": "MVC 5 output caching.",
+      "fix": "Output caching middleware."
+    },
+    {
+      "signal": "Newtonsoft.Json formatter",
+      "severity": "low",
+      "count": 2,
+      "files": [
+        "LegacyShop.Web/App_Start/WebApiConfig.cs"
+      ],
+      "meaning": "Web API 2 JSON settings (and XML negotiation).",
+      "fix": "System.Text.Json options (or AddNewtonsoftJson)."
+    },
+    {
+      "signal": "EF6-only APIs",
+      "severity": "medium",
+      "count": 6,
+      "files": [
+        "LegacyShop.Data/OrderRepository.cs",
+        "LegacyShop.Data/ShopContext.cs"
+      ],
+      "meaning": "APIs that don't exist in EF Core.",
+      "fix": "EF Core equivalents (HasOne, .Date, ...)."
+    },
+    {
+      "signal": "EF6 database initializer",
+      "severity": "low",
+      "count": 2,
+      "files": [
+        "LegacyShop.Data/ShopInitializer.cs",
+        "LegacyShop.Web/Global.asax.cs"
+      ],
+      "meaning": "Initializers + Seed.",
+      "fix": "EF Core migrations + seeding."
+    },
+    {
+      "signal": "Old-style .csproj",
+      "severity": "low",
+      "count": 4,
+      "files": [
+        "LegacyShop.Core/LegacyShop.Core.csproj",
+        "LegacyShop.Data/LegacyShop.Data.csproj",
+        "LegacyShop.Inventory/LegacyShop.Inventory.csproj",
+        "LegacyShop.Web/LegacyShop.Web.csproj"
+      ],
+      "meaning": "Non-SDK project format.",
+      "fix": "Convert to SDK-style (legacy-package-migrator / upgrade tooling)."
+    },
+    {
+      "signal": "packages.config",
+      "severity": "low",
+      "count": 3,
+      "files": [
+        "LegacyShop.Data/LegacyShop.Data.csproj",
+        "LegacyShop.Inventory/LegacyShop.Inventory.csproj",
+        "LegacyShop.Web/LegacyShop.Web.csproj"
+      ],
+      "meaning": "Old NuGet management.",
+      "fix": "PackageReference + Central Package Management (legacy-package-migrator)."
+    }
+  ],
+  "risks": [
+    {
+      "title": "Pricing and cart quirks change silently (order total ignores coupon/VAT, ViewState price, 3-for-2 per line, rounding)",
+      "impact": "high",
+      "mitigation": "Parity tests on the cart and checkout flow + characterization tests on PriceCalculator before any change. Decide quirk by quirk: keep or fix on purpose."
+    },
+    {
+      "title": "Sign-in breaks while two apps run (Forms auth ticket + machineKey)",
+      "impact": "high",
+      "mitigation": "Remote authentication through the System.Web adapters until the login page moves; then switch to ASP.NET Core cookie auth in one release."
+    },
+    {
+      "title": "Session cart lost between old and new pages",
+      "impact": "medium",
+      "mitigation": "Remote session (System.Web adapters) while both apps run; move cart pages together; serialize CartLine as JSON."
+    },
+    {
+      "title": "API clients depend on 302 redirects from [Authorize] endpoints",
+      "impact": "medium",
+      "mitigation": "Check API consumers. .NET 10 returns 401 - document it as a breaking change or keep the redirect on purpose."
+    },
+    {
+      "title": "Deleting a product deletes its order history (EF6 cascade)",
+      "impact": "medium",
+      "mitigation": "Decide Restrict vs Cascade in the EF Core model; add a soft delete if history must stay."
+    },
+    {
+      "title": "Product images use System.Drawing (Windows-only on .NET 6+)",
+      "impact": "low",
+      "mitigation": "Stay on Windows hosting at first, or move to ImageSharp/SkiaSharp (check the licenses)."
+    }
+  ],
+  "questions": [
+    "Do any API consumers rely on the XML format or on the 302 redirect from /api/orders/mine?",
+    "Which pricing quirks are bugs you want fixed, and which are business rules?",
+    "Where will .NET 10 run - IIS on the same Windows server, or containers?",
+    "Does anything outside this solution call the WCF inventory service?",
+    "Can the BinaryFormatter cache in App_Data/cache simply be deleted on deploy?"
+  ],
+  "nextSteps": [
+    "Decide the 4 open questions above (1 meeting).",
+    "Run migration-safety-net: record parity tests for all 6 pages and 5 API actions, characterization tests for PriceCalculator.",
+    "Convert all projects to SDK-style + PackageReference (legacy-package-migrator), multi-target LegacyShop.Core and LegacyShop.Data.",
+    "Run yarp-strangler-setup: .NET 10 host in front, everything proxied, remote auth + remote session on.",
+    "Move the first slices: Web API (GET endpoints), the image handler, the MVC report, Default.aspx - then Product, Cart, Login, Admin."
+  ],
+  "effortModel": {
+    "hoursPerDay": 6,
+    "reviewOverhead": 0.25,
+    "fixedCostScale": 0.5,
+    "totalLoc": 1398,
+    "aiShare": {
+      "mechanical": 0.9,
+      "translation": 0.7,
+      "verification": 0.8,
+      "decision": 0,
+      "environment": 0.3
+    },
+    "assumptions": [
+      "Hours are for one developer who knows the codebase, at 6 focused hours a day.",
+      "\"With AI\" = an agent does its share of the work and a developer reviews it (25% of the agent's share goes back into review).",
+      "Decisions (auth, session, hosting, UI targets) take the same time with or without AI.",
+      "Fixed costs (hosting, auth, session, config, rollout) are scaled by solution size: x0.5 under 3k LOC, x1 up to 30k, x1.5 above.",
+      "Ranges, not promises: re-estimate after the first 3 migrated slices."
+    ]
+  },
+  "totals": {
+    "hoursLowWithoutAi": 128,
+    "hoursHighWithoutAi": 280,
+    "hoursLowWithAi": 68,
+    "hoursHighWithAi": 149,
+    "daysLowWithoutAi": 21.3,
+    "daysHighWithoutAi": 46.7,
+    "daysLowWithAi": 11.3,
+    "daysHighWithAi": 24.8,
+    "size": "M",
+    "byCategory": {
+      "mechanical": [
+        12,
+        25,
+        3.9,
+        8.1
+      ],
+      "translation": [
+        70,
+        147.7,
+        33.3,
+        70.2
+      ],
+      "verification": [
+        18,
+        45,
+        7.2,
+        18
+      ],
+      "environment": [
+        18,
+        40,
+        14,
+        31
+      ],
+      "decision": [
+        10,
+        22,
+        10,
+        22
+      ]
+    }
+  }
+}

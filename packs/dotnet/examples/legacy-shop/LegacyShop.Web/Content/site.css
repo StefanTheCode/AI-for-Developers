@@ -1,0 +1,14 @@
+body { font-family: Segoe UI, Arial, sans-serif; margin: 0; color: #222; }
+header.top { display: flex; gap: 24px; align-items: center; padding: 12px 24px; background: #2b2d42; color: #fff; }
+header.top a { color: #fff; text-decoration: none; margin-right: 12px; }
+header.top .logo { font-weight: bold; font-size: 20px; }
+header.top .user { margin-left: auto; }
+main { padding: 24px; max-width: 1000px; }
+footer { padding: 24px; color: #888; font-size: 12px; }
+.grid { border-collapse: collapse; width: 100%; }
+.grid th, .grid td { border-bottom: 1px solid #ddd; padding: 6px 8px; text-align: left; }
+.muted { color: #888; }
+.message { color: #2a7; display: block; margin: 8px 0; }
+.error { color: #c33; display: block; margin: 8px 0; }
+.minicart { margin-left: 12px; }
+.price { font-size: 22px; font-weight: bold; }

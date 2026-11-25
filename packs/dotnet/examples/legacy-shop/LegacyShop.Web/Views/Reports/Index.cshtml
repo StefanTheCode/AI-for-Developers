@@ -1,0 +1,30 @@
+@model List<LegacyShop.Data.SalesRow>
+@{
+    ViewBag.Title = "Sales report";
+}
+<h1>Sales - last @ViewBag.Days days</h1>
+<p>
+    @Html.ActionLink("7 days", "Index", new { days = 7 }) |
+    @Html.ActionLink("30 days", "Index", new { days = 30 }) |
+    @Html.ActionLink("90 days", "Index", new { days = 90 })
+</p>
+@if (Model.Count == 0)
+{
+    <p class="muted">No orders in this period.</p>
+}
+else
+{
+    <table class="grid">
+        <tr><th>Day</th><th>Orders</th><th>Revenue</th></tr>
+        @foreach (var row in Model)
+        {
+            <tr>
+                <td>@row.Day.ToString("yyyy-MM-dd")</td>
+                <td>@row.Orders</td>
+                <td>@row.Revenue.ToString("0.00")</td>
+            </tr>
+        }
+    </table>
+}
+<h2>Top products</h2>
+@Html.Action("TopProducts", new { take = 5 })

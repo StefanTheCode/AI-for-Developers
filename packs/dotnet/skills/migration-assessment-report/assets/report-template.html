@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{TITLE}}</title>
+<style>
+  /* Brand-neutral on purpose: people send this report to managers and clients.
+     Change --accent (and the footer) if you want your own branding. */
+  :root {
+    --bg: #f7f7fb; --card: #ffffff; --text: #1d1b2c; --muted: #6b6880; --line: #e6e4f0;
+    --accent: #5b4bdb; --accent-soft: #ece9ff;
+    --hard: #c2364b; --hard-soft: #fde8eb; --medium: #b86e00; --medium-soft: #fff2dc; --low: #2d7a52; --low-soft: #e3f5ea;
+    --ai: #5b4bdb; --human: #c27b16;
+  }
+  [data-theme="dark"] {
+    --bg: #13111c; --card: #1c1a28; --text: #ecebf3; --muted: #a19db8; --line: #2e2b3f;
+    --accent: #9d8cff; --accent-soft: #2a2546;
+    --hard: #ff7a8c; --hard-soft: #3a1d25; --medium: #ffb547; --medium-soft: #3a2c14; --low: #5fd39a; --low-soft: #15321f;
+    --ai: #9d8cff; --human: #ffb547;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.55 -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 32px 24px 64px; }
+  header.top { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 8px; }
+  .eyebrow { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  h1 { font-size: 30px; line-height: 1.2; margin: 6px 0 8px; }
+  h2 { font-size: 21px; margin: 40px 0 12px; padding-top: 8px; border-top: 1px solid var(--line); }
+  h3 { font-size: 16px; margin: 20px 0 8px; }
+  p { margin: 0 0 12px; }
+  .muted { color: var(--muted); }
+  .small { font-size: 13px; }
+  .toolbar button { background: var(--card); color: var(--text); border: 1px solid var(--line); border-radius: 8px; padding: 6px 12px; cursor: pointer; font: inherit; font-size: 13px; }
+  .verdict { display: inline-block; padding: 4px 12px; border-radius: 999px; font-weight: 700; font-size: 13px; }
+  .verdict.go { background: var(--low-soft); color: var(--low); }
+  .verdict.go-with-conditions { background: var(--medium-soft); color: var(--medium); }
+  .verdict.not-now { background: var(--hard-soft); color: var(--hard); }
+  .verdict.pending { background: var(--accent-soft); color: var(--accent); }
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin: 20px 0; }
+  .kpi { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 16px; }
+  .kpi .label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+  .kpi .value { font-size: 26px; font-weight: 800; margin-top: 4px; }
+  .kpi .sub { font-size: 13px; color: var(--muted); }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; margin: 12px 0; }
+  table { width: 100%; border-collapse: collapse; background: var(--card); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; font-size: 14px; }
+  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { background: var(--accent-soft); color: var(--text); font-size: 12px; text-transform: uppercase; letter-spacing: .05em; }
+  tr:last-child td { border-bottom: none; }
+  td.num, th.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  code { font-family: "Cascadia Code", Consolas, Menlo, monospace; font-size: 12.5px; background: var(--accent-soft); padding: 1px 5px; border-radius: 5px; }
+  .chip { display: inline-block; padding: 1px 9px; border-radius: 999px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+  .chip.hard { background: var(--hard-soft); color: var(--hard); }
+  .chip.medium { background: var(--medium-soft); color: var(--medium); }
+  .chip.low { background: var(--low-soft); color: var(--low); }
+  .chip.size { background: var(--accent-soft); color: var(--accent); }
+  .bars { display: grid; gap: 14px; }
+  .bar-row .head { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 4px; }
+  .bar { height: 12px; border-radius: 6px; background: var(--line); position: relative; overflow: hidden; }
+  .bar span { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 6px; }
+  .bar .noai { background: var(--muted); opacity: .45; }
+  .bar .ai { background: var(--accent); }
+  .legend { display: flex; gap: 18px; font-size: 13px; color: var(--muted); margin: 8px 0 0; }
+  .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+  .split { display: flex; height: 14px; border-radius: 7px; overflow: hidden; margin-top: 6px; }
+  .split .a { background: var(--ai); } .split .h { background: var(--human); }
+  .diagram { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 16px; margin: 12px 0; overflow-x: auto; }
+  .diagram .caption { font-size: 13px; color: var(--muted); margin-top: 8px; }
+  pre.mermaid { margin: 0; white-space: pre-wrap; font-size: 12px; color: var(--muted); }
+  ul.clean { margin: 0; padding-left: 20px; }
+  ul.clean li { margin: 4px 0; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 800px) { .two { grid-template-columns: 1fr; } }
+  footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 12px; color: var(--muted); }
+  @media print {
+    .toolbar { display: none; }
+    body { background: #fff; }
+    h2 { break-before: auto; }
+    .diagram, .card, table { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+{{BODY}}
+<footer>
+  {{FOOTER}}
+</footer>
+</div>
+<script>
+  // Theme toggle (light / dark), remembered per browser when storage is available.
+  (function () {
+    var key = 'migration-report-theme';
+    var saved = null;
+    try { saved = localStorage.getItem(key); } catch (e) {}
+    var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    var theme = saved || (prefersDark ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', theme);
+    window.toggleTheme = function () {
+      theme = theme === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', theme);
+      try { localStorage.setItem(key, theme); } catch (e) {}
+      location.reload();
+    };
+  })();
+</script>
+<script id="mermaid-gz" type="application/octet-stream">{{MERMAID_GZ_BASE64}}</script>
+<script>
+  // Mermaid ships inside this file (gzip + base64) so the report works offline and by email.
+  (async function () {
+    var blocks = document.querySelectorAll('pre.mermaid');
+    if (!blocks.length) return;
+    try {
+      var b64 = document.getElementById('mermaid-gz').textContent.trim();
+      if (!b64 || !('DecompressionStream' in window)) return;
+      var bytes = Uint8Array.from(atob(b64), function (c) { return c.charCodeAt(0); });
+      var stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
+      var code = await new Response(stream).text();
+      var s = document.createElement('script');
+      s.textContent = code;
+      document.head.appendChild(s);
+      var dark = document.documentElement.getAttribute('data-theme') === 'dark';
+      window.mermaid.initialize({ startOnLoad: false, theme: dark ? 'dark' : 'default', securityLevel: 'loose', flowchart: { htmlLabels: true, curve: 'basis' } });
+      await window.mermaid.run({ querySelector: 'pre.mermaid' });
+    } catch (e) {
+      console.warn('Diagrams could not be rendered - showing their source instead.', e);
+    }
+  })();
+</script>
+</body>
+</html>
