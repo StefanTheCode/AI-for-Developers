@@ -15,6 +15,30 @@ Skills trigger automatically when your request matches; invoke an agent by askin
 /plugin marketplace update thecodeman-ai-toolkit
 ```
 
+## Option C - GitHub Copilot (VS Code, Copilot CLI, Visual Studio)
+
+Skills work in Copilot as they are. Agents have Copilot editions in `toolkit/copilot/agents/` (`.agent.md`).
+
+**Skills** - install the same plugins from this marketplace:
+
+```shell
+# Copilot CLI
+copilot plugin marketplace add StefanTheCode/AI-for-Developers
+copilot plugin install ai-dev-toolkit@thecodeman-ai-toolkit
+copilot plugin install dotnet-pack@thecodeman-ai-toolkit   # optional, .NET only
+```
+
+In VS Code: turn on `chat.plugins.enabled`, then **Chat: Open Customizations > Browse > Configure Marketplaces > Add Marketplace** and enter `StefanTheCode/AI-for-Developers`.
+
+**Agents** - copy them into your project (or `~/.copilot/agents/` for Copilot CLI, every project):
+
+```powershell
+New-Item -ItemType Directory -Force .github\agents | Out-Null
+Copy-Item <path-to-this-repo>\toolkit\copilot\agents\*.agent.md .github\agents\
+```
+
+The Copilot agents are generated from `toolkit/agents/*.md`. After you change an agent, run `python toolkit/tools/build-copilot-agents.py`.
+
 ## Migrating from dotnet-ai-toolkit
 
 The old `dotnet-ai-toolkit` repo and plugin are replaced by this one. Run once:
