@@ -456,7 +456,11 @@ Unit WebFormsUnit(ProjectInfo project, string dir, string markupPath)
     else if (m["updatePanels"] > 0 || m["inlineEditGrid"] > 0 || m["postbackHandlers"] >= 6)
     {
         target = "Blazor (Interactive Server)";
-        reason = $"Heavy in-page interactivity ({m["updatePanels"]} UpdatePanel, inline grid editing: {(m["inlineEditGrid"] > 0 ? "yes" : "no")}, {m["postbackHandlers"]} postback handlers) maps to components better than to page handlers.";
+        var signals = new List<string>();
+        if (m["updatePanels"] > 0) signals.Add($"{m["updatePanels"]} UpdatePanel{(m["updatePanels"] == 1 ? "" : "s")}");
+        if (m["inlineEditGrid"] > 0) signals.Add("inline grid editing");
+        if (m["postbackHandlers"] > 0) signals.Add($"{m["postbackHandlers"]} postback handler{(m["postbackHandlers"] == 1 ? "" : "s")}");
+        reason = $"Heavy in-page interactivity ({string.Join(", ", signals)}) maps to components better than to page handlers.";
     }
     else
     {

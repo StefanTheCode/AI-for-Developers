@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-25 15:32",
+  "generatedAt": "2026-11-25 15:44",
   "tool": "AI for Developers Toolkit - Migration Pack (beta)",
   "solution": {
     "name": "LegacyShop",
@@ -457,7 +457,7 @@
       "hoursLow": 10,
       "hoursHigh": 18,
       "target": "Blazor (Interactive Server)",
-      "targetReason": "Heavy in-page interactivity (0 UpdatePanel, inline grid editing: yes, 5 postback handlers) maps to components better than to page handlers.",
+      "targetReason": "Heavy in-page interactivity (inline grid editing, 5 postback handlers) maps to components better than to page handlers.",
       "metrics": {
         "serverControls": 25,
         "updatePanels": 0,
