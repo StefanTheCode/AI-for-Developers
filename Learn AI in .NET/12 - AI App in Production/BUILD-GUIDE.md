@@ -94,4 +94,4 @@ Add budget guardrails: a per-request token limit and a daily cost cap that switc
 
 ---
 
-**Finished all 12?** Post your production app in **[AI for Developers](https://www.skool.com/ai-for-dotnet-developers/about)**. That's where we build the Advanced & Expert levels with source code, roadmaps, and help when you get stuck.
+**Finished all 12?** Post your production app in **[AI for Developers](https://www.skool.com/ai-for-developers/about)**. That's where we build the Advanced & Expert levels with source code, roadmaps, and help when you get stuck.

@@ -49,4 +49,4 @@ Doing the **[Build Challenge](../CHALLENGE.md)**? Pick one project and ship it b
 
 ---
 
-Back to the **[main repo](../README.md)** · Join the **[AI for Developers community](https://www.skool.com/ai-for-dotnet-developers/about)** for walkthroughs and help when you get stuck.
+Back to the **[main repo](../README.md)** · Join the **[AI for Developers community](https://www.skool.com/ai-for-developers/about)** for walkthroughs and help when you get stuck.

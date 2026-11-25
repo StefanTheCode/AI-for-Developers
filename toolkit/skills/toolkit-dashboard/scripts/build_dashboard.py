@@ -24,7 +24,7 @@ import sys
 from datetime import datetime, timezone
 
 # ---- brand / links (edit these) ----
-COMMUNITY_URL = "https://www.skool.com/ai-for-dotnet-developers/about"
+COMMUNITY_URL = "https://www.skool.com/ai-for-developers/about"
 BRAND_NAME = "AI for Developers Toolkit"
 BRAND_SUB = "AI for Developers - skills & agents for any stack"
 

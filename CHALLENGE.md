@@ -93,13 +93,13 @@ Share it on LinkedIn/X and tag **Stefan Đokić**, or post it inside the communi
 
 The Starter and Intermediate levels are very doable on your own with these guides.
 
-**Advanced and Expert** are where most people get stuck: Ollama won't connect, the agent doesn't call tools, RAG answers with nonsense, the MCP client silently disconnects. That's what we do inside **[AI for .NET Developers](https://www.skool.com/ai-for-dotnet-developers/about)**:
+**Advanced and Expert** are where most people get stuck: Ollama won't connect, the agent doesn't call tools, RAG answers with nonsense, the MCP client silently disconnects. That's what we do inside **[AI for Developers](https://www.skool.com/ai-for-developers/about)**:
 
 - Source code, roadmaps, and video walkthroughs for the AI projects
 - A place to post your challenge progress and get feedback
 - Someone to ask when you get stuck
 
-👉 **[Join AI for .NET Developers](https://www.skool.com/ai-for-dotnet-developers/about)**
+👉 **[Join AI for Developers](https://www.skool.com/ai-for-developers/about)**
 
 ---
 

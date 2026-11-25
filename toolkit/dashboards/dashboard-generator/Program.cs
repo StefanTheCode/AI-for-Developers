@@ -14,7 +14,7 @@ using System.Text;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 
-const string CommunityUrl = "https://www.skool.com/ai-for-dotnet-developers/about";
+const string CommunityUrl = "https://www.skool.com/ai-for-developers/about";
 const string BrandName = "AI for Developers Toolkit";
 const string BrandSub = "AI for .NET developers";
 

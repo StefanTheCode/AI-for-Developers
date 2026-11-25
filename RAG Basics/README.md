@@ -90,4 +90,4 @@ Then use `RagBasics.http` (or Swagger) to add some text and ask a question. You'
 
 ## Want to go further?
 
-Building production RAG, agents, and MCP servers - in .NET and beyond - is exactly what I teach in the **[AI for Developers community](https://www.skool.com/ai-for-dotnet-developers/about)** on Skool: 49 skills, 7 agents, lessons, and live office hours (7-day free trial).
+Building production RAG, agents, and MCP servers - in .NET and beyond - is exactly what I teach in the **[AI for Developers community](https://www.skool.com/ai-for-developers/about)** on Skool: 49 skills, 7 agents, lessons, and live office hours (7-day free trial).

@@ -62,4 +62,4 @@ Enter a query when prompted and watch the titles get ranked by semantic relevanc
 
 ## Next step
 
-Semantic search is the foundation for RAG - see the **[RAG Basics](../RAG%20Basics)** module to feed retrieved results to an LLM. And to build production AI features and agents in your stack, join the **[AI for Developers community](https://www.skool.com/ai-for-dotnet-developers/about)** on Skool (7-day free trial).
+Semantic search is the foundation for RAG - see the **[RAG Basics](../RAG%20Basics)** module to feed retrieved results to an LLM. And to build production AI features and agents in your stack, join the **[AI for Developers community](https://www.skool.com/ai-for-developers/about)** on Skool (7-day free trial).

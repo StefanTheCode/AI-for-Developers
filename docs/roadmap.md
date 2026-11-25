@@ -646,7 +646,7 @@ That's the entire roadmap.
 
 - 🧩 [AI ToolKit skills on GitHub](https://github.com/StefanTheCode/dotnet-ai-toolkit) · 📄 CLAUDE.md Generator · 🔌 MCP Server Generator
 
-**A step-by-step mini-course** (video clips for every stage) is being recorded inside the **[AI for Developers community](https://www.skool.com/ai-for-dotnet-developers/about)** on Skool - 7-day free trial, plus 49 skills, 7 agents, lessons, and live office hours where I answer your questions.
+**A step-by-step mini-course** (video clips for every stage) is being recorded inside the **[AI for Developers community](https://www.skool.com/ai-for-developers/about)** on Skool - 7-day free trial, plus 49 skills, 7 agents, lessons, and live office hours where I answer your questions.
 
 📬 [Weekly newsletter on .NET, architecture & AI](https://thecodeman.net) (21,000+ developers) · ▶️ [YouTube](https://www.youtube.com/@thecodeman_)
 

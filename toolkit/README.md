@@ -2,7 +2,7 @@
 
 **45 Claude Code skills and 7 specialist agents that run on your real code, in any stack.** .NET, Node/TypeScript, Python, Java/Kotlin and Go are all first-class: every skill detects your stack first, then applies the right tools and idioms. Plus a separate **[.NET Pack](../packs/dotnet)** with 4 .NET-only skills.
 
-Part of the **[AI for Developers](https://www.skool.com/ai-for-dotnet-developers/about)** community by [Stefan Đokić - TheCodeMan](https://thecodeman.net), Microsoft MVP.
+Part of the **[AI for Developers](https://www.skool.com/ai-for-developers/about)** community by [Stefan Đokić - TheCodeMan](https://thecodeman.net), Microsoft MVP.
 
 ---
 
@@ -173,7 +173,7 @@ Install, then talk to Claude Code in plain language. It routes to the right skil
 
 ## Get the most out of it
 
-Every skill has a video or written lesson inside the **[AI for Developers community](https://www.skool.com/ai-for-dotnet-developers/about)** on Skool (7-day free trial): when to use it, the exact prompts, what good output looks like, plus live office hours and new skills every week.
+Every skill has a video or written lesson inside the **[AI for Developers community](https://www.skool.com/ai-for-developers/about)** on Skool (7-day free trial): when to use it, the exact prompts, what good output looks like, plus live office hours and new skills every week.
 
 📬 Free: [weekly newsletter on .NET, architecture & AI](https://thecodeman.net) (21,000+ developers) · ▶️ [YouTube](https://www.youtube.com/@thecodeman_)
 
